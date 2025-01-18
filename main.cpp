@@ -11,7 +11,7 @@ int main(int argc, char **argv)
         std::cerr << "Usage: ./ircserv <port> <password>" << std::endl;
         return(1);
     }
-    
+
     int port_n = std::atoi(argv[1]);
     int sockfd = socket(AF_INET, SOCK_STREAM, 0); // creates an endpoint for communication
     if (sockfd == -1)
@@ -21,7 +21,8 @@ int main(int argc, char **argv)
     }
 
     // Need to to set the socket to non-blocking
-
+    fcntl(sockfd, F_SETFL, O_NONBLOCK)
+    
     struct sockaddr_in serv_addr;
     std::memset(&serv_addr, 0, sizeof(serv_addr));
 
