@@ -3,6 +3,8 @@
 #include <sys/socket.h>
 #include <cstdlib>
 #include <fcntl.h>
+#include <poll.h>
+
 
 int main(int argc, char **argv)
 {
@@ -54,4 +56,16 @@ int main(int argc, char **argv)
         return(1);
     }
     close(sockfd);
+
+    //poll()
+    struct pollfd fds; 
+    fds.fd = sockfd;
+    fds.events = POLLIN; //for reading from the server socket
+
+    //need a User class
+    while(true)
+    {
+
+    }
+
 }
