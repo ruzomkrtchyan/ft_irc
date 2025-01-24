@@ -1,10 +1,5 @@
 
-#include <iostream>
-#include <sys/socket.h>
-#include <cstdlib>
-#include <fcntl.h>
-#include <poll.h>
-
+#include "Server.hpp"
 
 int main(int argc, char **argv)
 {
@@ -57,15 +52,20 @@ int main(int argc, char **argv)
     }
     close(sockfd);
 
-    //poll()
+    //Need to set up poll() to handle multiple sockets.
     struct pollfd fds; 
     fds.fd = sockfd;
     fds.events = POLLIN; //for reading from the server socket
 
-    //need a User class
+    //need a Client class
     while(true)
     {
 
     }
+    //Need to handle the password authentication when a client first connects.
+    //Each client will need to set a nickname and username. Need to track the client states.
+    //Need to manage the channels, user roles (operator or regular user), and commands, handle channel membership and permissions.
+    //When a message is sent to a channel, you’ll need to forward it to all other clients in that channel.
+
 
 }
