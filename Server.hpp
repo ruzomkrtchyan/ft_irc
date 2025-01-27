@@ -6,6 +6,9 @@
 #include <cstdlib>
 #include <fcntl.h>
 #include <poll.h>
+#include <arpa/inet.h>
+#include <vector>
+// #include <netinet/in.h>
 
 class Server
 {
