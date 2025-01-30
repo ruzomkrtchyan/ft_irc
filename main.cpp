@@ -59,17 +59,41 @@ int main(int argc, char **argv)
 		{
 			if(fds[i].revents && POLLIN) //revents tells us what event happened on each socket
 			{
-				struct sockaddr_in client_addr;
-				socklen_t client_size = sizeof(client_addr);
-				int client_sockfd = accept(sockfd, (struct sockaddr*)&client_addr, &client_size);
-				
-				if (client_sockfd == -1)
+				if (fds[i].fd == sockfd) //new client connection
 				{
-					std::cerr << "Failed to accept client connection!" << std::endl;
-					close(sockfd);
-					return(1);
-				}
+					struct sockaddr_in client_addr;
+					socklen_t client_size = sizeof(client_addr);
+					int client_sockfd = accept(sockfd, (struct sockaddr*)&client_addr, &client_size);
 
+					fcntl(client_sockfd, F_SETFL, O_NONBLOCK);
+					if (client_sockfd != -1)
+					{
+						struct pollfd clientpoll_fd;
+						clientpoll_fd.fd = client_sockfd;
+						clientpoll_fd.events = POLLIN;
+						fds.push_back(clientpoll_fd);
+						std::cout << "Client connected!" << std::endl;
+					}
+				}
+				else //receiving data
+				{
+					char buffer[1024];
+					std::memset(buffer, 0, sizeof(buffer));
+					int book = recv(fds[i].fd, buffer, sizeof(buffer) - 1, 0);
+
+					if (book <= 0)
+					{
+						std::cout << "The Client disconnected." << std::endl;
+						close(fds[i].fd);
+						fds.erase(fds.begin() + i);
+						--i;
+					}
+					else
+					{
+						std::cout << "Received message: " << buffer << std::endl;
+						send(fds[i].fd, "Message received\n", 17, 0);
+					}
+				}
 			}
 		}
 		
