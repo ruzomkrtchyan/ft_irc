@@ -8,15 +8,24 @@
 #include <poll.h>
 #include <arpa/inet.h>
 #include <vector>
-// #include <netinet/in.h>
+#include <unistd.h>
+#include <map>
+
+class Client;
+class Channel;
 
 class Server
 {
-    public:
+    private:
+        int         port;
+        int         sockfd;
         std::string password;
-        int port;
+        std::vector<struct pollfd> fds;
 
+        int create_sock();
 
+    public:
+        Server(int prt, std::string passw);
 };
 
 #endif
