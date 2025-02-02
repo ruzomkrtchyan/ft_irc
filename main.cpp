@@ -10,4 +10,5 @@ int main(int argc, char **argv)
 	}
 
 	Server serv(std::atoi(argv[1]), argv[2]);
+	serv.connect();
 }
