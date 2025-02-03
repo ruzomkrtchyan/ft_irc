@@ -10,6 +10,7 @@
 #include <vector>
 #include <unistd.h>
 #include <map>
+#include "Client.hpp"
 
 class Client;
 class Channel;
@@ -21,6 +22,7 @@ class Server
         int         sockfd;
         std::string password;
         std::vector<struct pollfd> fds;
+        std::map<int, Client> clients;
 
         void create_sock();
         void new_client();

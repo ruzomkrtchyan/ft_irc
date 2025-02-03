@@ -90,6 +90,7 @@ void Server::new_client()
 		clientpoll_fd.fd = client_sockfd;
 		clientpoll_fd.events = POLLIN;
 		fds.push_back(clientpoll_fd);
+		clients.insert(std::make_pair(client_sockfd, Client(client_sockfd)));
 		std::cout << "Client connected!" << std::endl;
 	}
 }
@@ -102,9 +103,10 @@ void Server::receiving_data(int i)
 
 	if (book <= 0)
 	{
-		std::cout << "The Client disconnected." << std::endl;
 		close(fds[i].fd);
+		clients.erase(fds[i].fd);
 		fds.erase(fds.begin() + i);
+		std::cout << "The Client disconnected." << std::endl;
 		--i;
 	}
 	else
