@@ -7,7 +7,7 @@ Server::Server(int prt, std::string passw):port(prt), password(passw)
 
 void Server::create_sock()
 {
-    sockfd = socket(AF_INET, SOCK_STREAM, 0); // creates an endpoint for communication
+	sockfd = socket(AF_INET, SOCK_STREAM, 0); // creates an endpoint for communication
 	if (sockfd == -1)
 	{
 		std::cerr << "Failed to create a socket!" << std::endl;
@@ -83,15 +83,54 @@ void Server::new_client()
 	socklen_t client_size = sizeof(client_addr);
 	int client_sockfd = accept(sockfd, (struct sockaddr*)&client_addr, &client_size);
 
-	fcntl(client_sockfd, F_SETFL, O_NONBLOCK);
-	if (client_sockfd != -1)
+	// fcntl(client_sockfd, F_SETFL, O_NONBLOCK);
+	 if (client_sockfd == -1)
 	{
-		struct pollfd clientpoll_fd;
-		clientpoll_fd.fd = client_sockfd;
-		clientpoll_fd.events = POLLIN;
-		fds.push_back(clientpoll_fd);
-		std::cout << "Client connected!" << std::endl;
+		std::cerr << "Failed to accept a client!" << std::endl;
+		return;
 	}
+
+	// Set client socket to non-blocking
+	fcntl(client_sockfd, F_SETFL, O_NONBLOCK);
+
+	// Ask for a password
+	const char* request_msg = "Enter password:\n";
+	send(client_sockfd, request_msg, strlen(request_msg), 0);
+
+	// Receive the password
+	char buffer[256];
+	std::memset(buffer, 0, sizeof(buffer));
+	int bytes_received = recv(client_sockfd, buffer, sizeof(buffer) - 1, 0);
+
+	if (bytes_received <= 0) 
+	{
+		std::cerr << "Client failed to send a password." << std::endl;
+		close(client_sockfd);
+		return;
+	}
+
+	// Remove trailing newline characters (clients often send passwords with '\n' or '\r')
+	std::string received_password(buffer);
+	received_password.erase(std::remove(received_password.begin(), received_password.end(), '\n'), received_password.end());
+	received_password.erase(std::remove(received_password.begin(), received_password.end(), '\r'), received_password.end());
+
+	// Check if the password is correct
+	if (received_password != password)
+	{
+		const char* error_msg = "Incorrect password. Connection closed.\n";
+		send(client_sockfd, error_msg, strlen(error_msg), 0);
+		close(client_sockfd);
+		return;
+	}
+
+	// If correct, add the client to poll list
+	struct pollfd clientpoll_fd;
+	clientpoll_fd.fd = client_sockfd;
+	clientpoll_fd.events = POLLIN;
+	fds.push_back(clientpoll_fd);
+
+	std::cout << "Client authenticated successfully!" << std::endl;
+	send(client_sockfd, "Welcome to the server!\n", 23, 0);
 }
 
 void Server::receiving_data(int i)

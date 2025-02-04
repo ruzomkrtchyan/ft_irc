@@ -16,19 +16,19 @@ class Channel;
 
 class Server
 {
-    private:
-        int         port;
-        int         sockfd;
-        std::string password;
-        std::vector<struct pollfd> fds;
+	private:
+		int		port;
+		int		sockfd;
+		std::string password;
+		std::vector<struct pollfd> fds;
 
-        void create_sock();
-        void new_client();
-        void receiving_data(int i);
+		void create_sock();
+		void new_client();
+		void receiving_data(int i);
 
-    public:
-        Server(int prt, std::string passw);
-        void connect();
+	public:
+		Server(int prt, std::string passw);
+		void connect();
 
 };
 
