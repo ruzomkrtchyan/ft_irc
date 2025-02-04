@@ -8,6 +8,7 @@
 #include <poll.h>
 #include <arpa/inet.h>
 #include <vector>
+#include <cstring> 
 #include <unistd.h>
 #include <map>
 
