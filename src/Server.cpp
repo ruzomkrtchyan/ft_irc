@@ -111,7 +111,13 @@ void Server::receiving_data(int i)
 	}
 	else
 	{
+		Server::handle_msg(i, buffer);
 		std::cout << "Received message: " << buffer << std::endl;
 		send(fds[i].fd, "Message received\n", 17, 0);
 	}
+}
+
+void Server::handle_msg(int i, std::string msg)
+{
+
 }
