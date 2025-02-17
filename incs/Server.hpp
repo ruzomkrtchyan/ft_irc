@@ -2,6 +2,7 @@
 #define SERVER_HPP
 
 #include <iostream>
+#include <string>
 #include <sys/socket.h>
 #include <cstdlib>
 #include <fcntl.h>
@@ -11,6 +12,7 @@
 #include <cstring> 
 #include <unistd.h>
 #include <map>
+#include "Client.hpp"
 
 class Client;
 class Channel;
@@ -18,18 +20,21 @@ class Channel;
 class Server
 {
 	private:
-		int		port;
-		int		sockfd;
+		int         port;
+		int         sockfd;
 		std::string password;
 		std::vector<struct pollfd> fds;
+		std::map<int, Client> clients;
 
-		void create_sock();
-		void new_client();
-		void receiving_data(int i);
+		void        create_sock();
+		void        new_client();
+		void        receiving_data(int i);
+		std::string trim_p(std::string pass);
+		void		client_authentication(int i, std::string msg);
 
 	public:
 		Server(int prt, std::string passw);
-		void connect();
+		void		connect();
 
 };
 

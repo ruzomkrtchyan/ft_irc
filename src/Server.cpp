@@ -4,37 +4,37 @@ Server::Server(int prt, std::string passw) : port(prt), password(passw) {
     Server::create_sock();
 }
 
-void Server::create_sock() {
-    sockfd = socket(AF_INET, SOCK_STREAM, 0);
-    if (sockfd == -1) {
-        std::cerr << "Failed to create a socket!" << std::endl;
-        exit(1);
-    }
+void Server::create_sock()
+{
+	sockfd = socket(AF_INET, SOCK_STREAM, 0); // creates an endpoint for communication
+	if (sockfd == -1)
+	{
+		std::cerr << "Failed to create a socket!" << std::endl;
+		exit(1); 
+	}
 
-    // Set socket to non-blocking mode
-    if (fcntl(sockfd, F_SETFL, O_NONBLOCK) == -1) {
-        std::cerr << "Failed to set socket to non-blocking mode!" << std::endl;
-        close(sockfd);
-        exit(1);
-    }
+	// Need to to set the socket to non-blocking
+	fcntl(sockfd, F_SETFL, O_NONBLOCK);
+	
+	struct sockaddr_in serv_addr;
+	std::memset(&serv_addr, 0, sizeof(serv_addr));
 
-    struct sockaddr_in serv_addr;
-    std::memset(&serv_addr, 0, sizeof(serv_addr));
+	serv_addr.sin_family = AF_INET;
+	serv_addr.sin_port = htons(port);
+	serv_addr.sin_addr.s_addr = INADDR_ANY; //tells the server to listen on all available network interfaces (all IP addresses of the machine).
 
-    serv_addr.sin_family = AF_INET;
-    serv_addr.sin_port = htons(port);
-    serv_addr.sin_addr.s_addr = INADDR_ANY;
-
-    if (bind(sockfd, (struct sockaddr*)&serv_addr, sizeof(serv_addr)) == -1) {
-        std::cerr << "Failed to bind the socket!" << std::endl;
-        close(sockfd);
-        exit(1);
-    }
-    if (listen(sockfd, SOMAXCONN) == -1) {
-        std::cerr << "Failed to listen on the socket!" << std::endl;
-        close(sockfd);
-        exit(1);
-    }
+	if (bind(sockfd, (struct sockaddr*)&serv_addr, sizeof(serv_addr)) == -1)
+	{
+		std::cerr << "Failed to bind a socket!" << std::endl;
+		close(sockfd);
+		exit(1);
+	}
+	if (listen(sockfd, SOMAXCONN) == -1)
+	{
+		std::cerr << "Failed to listen!" << std::endl;
+		close(sockfd);
+		exit(1);
+	}
 }
 
 void Server::connect() {
@@ -65,75 +65,92 @@ void Server::connect() {
     close(sockfd);
 }
 
-void Server::new_client() {
-    struct sockaddr_in client_addr;
-    socklen_t client_size = sizeof(client_addr);
-    int client_sockfd = accept(sockfd, (struct sockaddr*)&client_addr, &client_size);
+void Server::new_client()
+{
+	struct sockaddr_in client_addr;
+	socklen_t client_size = sizeof(client_addr);
+	int client_sockfd = accept(sockfd, (struct sockaddr*)&client_addr, &client_size);
 
-    if (client_sockfd == -1) {
-        std::cerr << "Failed to accept a client!" << std::endl;
-        return;
-    }
-
-    // Set client socket to non-blocking
-    if (fcntl(client_sockfd, F_SETFL, O_NONBLOCK) == -1) {
-        std::cerr << "Failed to set client socket to non-blocking mode!" << std::endl;
-        close(client_sockfd);
-        return;
-    }
-
-    // Ask for password
-    const char* request_msg = "Enter password:\n";
-    send(client_sockfd, request_msg, strlen(request_msg), 0);
-
-    // Receive password
-    char buffer[256];
-    std::memset(buffer, 0, sizeof(buffer));
-    int bytes_received = recv(client_sockfd, buffer, sizeof(buffer) - 1, 0);
-
-    if (bytes_received <= 0) {
-        std::cerr << "Client failed to send a password." << std::endl;
-        close(client_sockfd);
-        return;
-    }
-
-    // Remove trailing newline characters
-    std::string received_password(buffer);
-    // Remove trailing newline characters
-	received_password.erase(std::remove(received_password.begin(), received_password.end(), '\n'), received_password.end());
-	received_password.erase(std::remove(received_password.begin(), received_password.end(), '\r'), received_password.end());
-
-
-
-    // Validate password
-    if (received_password != password) {
-        const char* error_msg = "Incorrect password. Connection closed.\n";
-        send(client_sockfd, error_msg, strlen(error_msg), 0);
-        close(client_sockfd);
-        return;
-    }
-
-    // Add client to poll list
-    struct pollfd clientpoll_fd;
-    clientpoll_fd.fd = client_sockfd;
-    clientpoll_fd.events = POLLIN;
-    fds.push_back(clientpoll_fd);
-
-    std::cout << "Client authenticated successfully!" << std::endl;
-    send(client_sockfd, "Welcome to the server!\n", 23, 0);
+	if (client_sockfd != -1)
+	{
+		fcntl(client_sockfd, F_SETFL, O_NONBLOCK);
+		
+		struct pollfd clientpoll_fd;
+		clientpoll_fd.fd = client_sockfd;
+		clientpoll_fd.events = POLLIN;
+		fds.push_back(clientpoll_fd);
+		clients.insert(std::make_pair(client_sockfd, Client(client_sockfd)));
+		std::cout << "New client connected! Waiting for authentication ..." << std::endl;
+		send(client_sockfd, "Please enter PASS <password> \n", 30, 0);
+	}
 }
 
-void Server::receiving_data(int i) {
-    char buffer[1024];
-    std::memset(buffer, 0, sizeof(buffer));
-    int bytes_received = recv(fds[i].fd, buffer, sizeof(buffer) - 1, 0);
+void Server::receiving_data(int i)
+{
+	char buffer[1024];
+	std::memset(buffer, 0, sizeof(buffer));
+	int book = recv(fds[i].fd, buffer, sizeof(buffer) - 1, 0);
 
-    if (bytes_received <= 0) {
-        std::cout << "Client disconnected." << std::endl;
-        close(fds[i].fd);
-        fds.erase(fds.begin() + i);
-    } else {
-        std::cout << "Received message: " << buffer << std::endl;
-        send(fds[i].fd, "Message received\n", 17, 0);
-    }
+	if (book <= 0)
+	{
+		close(fds[i].fd);
+		clients.erase(fds[i].fd);
+		fds.erase(fds.begin() + i);
+		std::cout << "The Client disconnected." << std::endl;
+		--i;
+	}
+	Server::client_authentication(i, buffer);
+	// else
+	// {
+	// 	Server::handle_msg(i, buffer);
+	// 	// std::cout << "Received message: " << buffer << std::endl;
+	// 	// send(fds[i].fd, "Message received\n", 17, 0);
+	// }
+}
+
+// void Server::handle_msg(int i, std::string msg)
+// {}
+
+std::string Server::trim_p(std::string pass)
+{
+	size_t start = pass.find_first_not_of(" \t\n\r");
+	size_t end = pass.find_last_not_of(" \t\n\r");
+
+	if (start == std::string::npos || end == std::string::npos)
+		return "";
+	return (pass.substr(start, end - start + 1));
+}
+
+void Server::client_authentication(int i, std::string msg)
+{
+	if (clients[fds[i].fd].authenticated == false)
+	{
+		if (msg.find("PASS " == 0))
+		{
+			int	retry = 0;
+			std::string pass = Server::trim_p(msg.substr(5));
+			if (pass == password)
+			{
+				clients[fds[i].fd].authenticated = true;
+				send(fds[i].fd, "Password accepted. Please enter NICK <yournickname>", 51, 0);
+			}
+			else
+			{
+				if (retry < 3)
+				{
+					send(fds[i].fd, "Incorrect password, please enter PASS <password> ", 49, 0);
+					retry++;
+				}
+				else
+				{
+					send(fds[i].fd, "Incorrect password. Connection closing.\n", 40, 0);
+    	            close(fds[i].fd);
+    	            clients.erase(fds[i].fd);
+    	            fds.erase(fds.begin() + i);
+				}
+			}
+		}
+		else
+    	    send(fds[i].fd, "You must send PASS <password> first.\n", 38, 0);
+	}
 }
