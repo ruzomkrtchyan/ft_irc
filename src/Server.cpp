@@ -7,7 +7,7 @@ Server::Server(int prt, std::string passw):port(prt), password(passw)
 
 void Server::create_sock()
 {
-    sockfd = socket(AF_INET, SOCK_STREAM, 0); // creates an endpoint for communication
+	sockfd = socket(AF_INET, SOCK_STREAM, 0); // creates an endpoint for communication
 	if (sockfd == -1)
 	{
 		std::cerr << "Failed to create a socket!" << std::endl;
@@ -83,15 +83,17 @@ void Server::new_client()
 	socklen_t client_size = sizeof(client_addr);
 	int client_sockfd = accept(sockfd, (struct sockaddr*)&client_addr, &client_size);
 
-	fcntl(client_sockfd, F_SETFL, O_NONBLOCK);
 	if (client_sockfd != -1)
 	{
+		fcntl(client_sockfd, F_SETFL, O_NONBLOCK);
+		
 		struct pollfd clientpoll_fd;
 		clientpoll_fd.fd = client_sockfd;
 		clientpoll_fd.events = POLLIN;
 		fds.push_back(clientpoll_fd);
 		clients.insert(std::make_pair(client_sockfd, Client(client_sockfd)));
-		std::cout << "Client connected!" << std::endl;
+		std::cout << "New client connected! Waiting for authentication ..." << std::endl;
+		send(client_sockfd, "Please enter PASS <password> \n", 30, 0);
 	}
 }
 
@@ -109,15 +111,58 @@ void Server::receiving_data(int i)
 		std::cout << "The Client disconnected." << std::endl;
 		--i;
 	}
-	else
-	{
-		Server::handle_msg(i, buffer);
-		std::cout << "Received message: " << buffer << std::endl;
-		send(fds[i].fd, "Message received\n", 17, 0);
-	}
+	Server::client_authentication(i, buffer);
+	// else
+	// {
+	// 	Server::handle_msg(i, buffer);
+	// 	// std::cout << "Received message: " << buffer << std::endl;
+	// 	// send(fds[i].fd, "Message received\n", 17, 0);
+	// }
 }
 
-void Server::handle_msg(int i, std::string msg)
-{
+// void Server::handle_msg(int i, std::string msg)
+// {}
 
+std::string Server::trim_p(std::string pass)
+{
+	size_t start = pass.find_first_not_of(" \t\n\r");
+	size_t end = pass.find_last_not_of(" \t\n\r");
+
+	if (start == std::string::npos || end == std::string::npos)
+		return "";
+	return (pass.substr(start, end - start + 1));
+}
+
+void Server::client_authentication(int i, std::string msg)
+{
+	if (clients[fds[i].fd].authenticated == false)
+	{
+		if (msg.find("PASS " == 0))
+		{
+			int	retry = 0;
+			std::string pass = Server::trim_p(msg.substr(5));
+			if (pass == password)
+			{
+				clients[fds[i].fd].authenticated = true;
+				send(fds[i].fd, "Password accepted. Please enter NICK <yournickname>", 51, 0);
+			}
+			else
+			{
+				if (retry < 3)
+				{
+					send(fds[i].fd, "Incorrect password, please enter PASS <password> ", 49, 0);
+					retry++;
+				}
+				else
+				{
+					send(fds[i].fd, "Incorrect password. Connection closing.\n", 40, 0);
+    	            close(fds[i].fd);
+    	            clients.erase(fds[i].fd);
+    	            fds.erase(fds.begin() + i);
+				}
+			}
+		}
+		else
+    	    send(fds[i].fd, "You must send PASS <password> first.\n", 38, 0);
+	}
 }
