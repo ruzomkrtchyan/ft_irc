@@ -1,7 +1,7 @@
 #include "Server.hpp"
 
 Server::Server(int prt, std::string passw) : port(prt), password(passw) {
-    Server::create_sock();
+	Server::create_sock();
 }
 
 void Server::create_sock()
@@ -38,31 +38,31 @@ void Server::create_sock()
 }
 
 void Server::connect() {
-    struct pollfd serv_fd;
-    serv_fd.fd = sockfd;
-    serv_fd.events = POLLIN;
-    fds.push_back(serv_fd);
+	struct pollfd serv_fd;
+	serv_fd.fd = sockfd;
+	serv_fd.events = POLLIN;
+	fds.push_back(serv_fd);
 
-    while (true) {
-        int ret = poll(fds.data(), fds.size(), -1);
-        if (ret == -1) {
-            std::cerr << "Error in poll()!" << std::endl;
-            break;
-        }
+	while (true) {
+		int ret = poll(fds.data(), fds.size(), -1);
+		if (ret == -1) {
+			std::cerr << "Error in poll()!" << std::endl;
+			break;
+		}
 
-        for (size_t i = 0; i < fds.size(); ++i) {
-            if (fds[i].revents & POLLIN) { // Corrected bitwise AND
-                if (fds[i].fd == sockfd)
-                    Server::new_client();
-                else
-                    Server::receiving_data(i);
-            }
-        }
-    }
+		for (size_t i = 0; i < fds.size(); ++i) {
+			if (fds[i].revents & POLLIN) { // Corrected bitwise AND
+				if (fds[i].fd == sockfd)
+					Server::new_client();
+				else
+					Server::receiving_data(i);
+			}
+		}
+	}
 
-    for (size_t i = 0; i < fds.size(); ++i)
-        close(fds[i].fd);
-    close(sockfd);
+	for (size_t i = 0; i < fds.size(); ++i)
+		close(fds[i].fd);
+	close(sockfd);
 }
 
 void Server::new_client()
@@ -144,13 +144,13 @@ void Server::client_authentication(int i, std::string msg)
 				else
 				{
 					send(fds[i].fd, "Incorrect password. Connection closing.\n", 40, 0);
-    	            close(fds[i].fd);
-    	            clients.erase(fds[i].fd);
-    	            fds.erase(fds.begin() + i);
+					close(fds[i].fd);
+					clients.erase(fds[i].fd);
+					fds.erase(fds.begin() + i);
 				}
 			}
 		}
 		else
-    	    send(fds[i].fd, "You must send PASS <password> first.\n", 38, 0);
+			send(fds[i].fd, "You must send PASS <password> first.\n", 38, 0);
 	}
 }
