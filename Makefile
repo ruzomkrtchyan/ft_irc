@@ -1,4 +1,4 @@
-NAME		= ft_irc
+NAME		= ircserv
 SRC_DIR		= src
 SRC			= $(wildcard $(SRC_DIR)/*.cpp)
 

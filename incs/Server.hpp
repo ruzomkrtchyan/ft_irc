@@ -31,11 +31,11 @@ class Server
 		void		receiving_data(int i);
 		std::string trim_p(std::string pass);
 		void		client_authentication(int i, std::string msg);
+		void		client_nickname(int i, std::string msg);
 
 	public:
 		Server(int prt, std::string passw);
 		void		connect();
-
 };
 
 #endif

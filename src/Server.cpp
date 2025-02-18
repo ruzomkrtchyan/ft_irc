@@ -79,11 +79,14 @@ void Server::new_client()
 		clientpoll_fd.fd = client_sockfd;
 		clientpoll_fd.events = POLLIN;
 		fds.push_back(clientpoll_fd);
-		clients.insert(std::make_pair(client_sockfd, Client(client_sockfd)));
+
+		clients.insert(std::make_pair(client_sockfd, Client(client_sockfd, client_addr)));
+
 		std::cout << "New client connected! Waiting for authentication ..." << std::endl;
-		send(client_sockfd, "Please enter PASS <password> \n", 30, 0);
+		send(client_sockfd, "Please enter PASS <password>\n", 30, 0);
 	}
 }
+
 
 void Server::receiving_data(int i)
 {
@@ -99,13 +102,18 @@ void Server::receiving_data(int i)
 		std::cout << "The Client disconnected." << std::endl;
 		--i;
 	}
-	Server::client_authentication(i, buffer);
+	// Server::client_authentication(i, buffer);
 	// else
 	// {
 	// 	Server::handle_msg(i, buffer);
 	// 	// std::cout << "Received message: " << buffer << std::endl;
 	// 	// send(fds[i].fd, "Message received\n", 17, 0);
 	// }
+	std::string msg(buffer);
+	if (!clients[fds[i].fd].authenticated)
+		Server::client_authentication(i, msg);
+	else if (clients[fds[i].fd].nickname.empty())
+		Server::client_nickname(i, msg);
 }
 
 // void Server::handle_msg(int i, std::string msg)
@@ -125,14 +133,14 @@ void Server::client_authentication(int i, std::string msg)
 {
 	if (clients[fds[i].fd].authenticated == false)
 	{
-		if (msg.find("PASS " == 0))
+		if (msg.find("PASS ") == 0)
 		{
 			int	retry = 0;
 			std::string pass = Server::trim_p(msg.substr(5));
 			if (pass == password)
 			{
 				clients[fds[i].fd].authenticated = true;
-				send(fds[i].fd, "Password accepted. Please enter NICK <yournickname>", 51, 0);
+				send(fds[i].fd, "Password accepted. Please enter NICK <yournickname>\n", 52, 0);
 			}
 			else
 			{
@@ -154,3 +162,27 @@ void Server::client_authentication(int i, std::string msg)
 			send(fds[i].fd, "You must send PASS <password> first.\n", 38, 0);
 	}
 }
+
+void Server::client_nickname(int i, std::string msg)
+{
+	int client_fd = fds[i].fd;
+
+	if (msg.find("NICK ") == 0)
+	{
+		std::string nickname = Server::trim_p(msg.substr(5));
+		if (!nickname.empty())
+		{
+			clients[client_fd].nickname = nickname;
+			send(client_fd, "Nickname set successfully! Welcome!\n", 36, 0);
+			std::cout << "Client " << client_fd << " set nickname: " << nickname << std::endl;
+		}
+		else
+		{
+			send(client_fd, "Invalid nickname. Please try again.\n", 35, 0);
+		}
+	}
+	else
+	{
+		send(client_fd, "You must set your nickname using NICK <name>\n", 44, 0);
+	}
+}	
