@@ -37,21 +37,26 @@ void Server::create_sock()
 	}
 }
 
-void Server::connect() {
+void Server::connect() 
+{
 	struct pollfd serv_fd;
 	serv_fd.fd = sockfd;
 	serv_fd.events = POLLIN;
 	fds.push_back(serv_fd);
 
-	while (true) {
+	while (true) 
+	{
 		int ret = poll(fds.data(), fds.size(), -1);
-		if (ret == -1) {
+		if (ret == -1) 
+		{
 			std::cerr << "Error in poll()!" << std::endl;
 			break;
 		}
 
-		for (size_t i = 0; i < fds.size(); ++i) {
-			if (fds[i].revents & POLLIN) { // Corrected bitwise AND
+		for (size_t i = 0; i < fds.size(); ++i) 
+		{
+			if (fds[i].revents & POLLIN) 
+			{
 				if (fds[i].fd == sockfd)
 					Server::new_client();
 				else
