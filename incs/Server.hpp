@@ -12,6 +12,7 @@
 #include <cstring> 
 #include <unistd.h>
 #include <map>
+#include <sstream>
 #include "Client.hpp"
 
 class Client;
@@ -32,6 +33,8 @@ class Server
 		std::string trim_p(std::string pass);
 		void		client_authentication(int i, std::string msg);
 		void		client_nickname(int i, std::string msg);
+		void		client_username(int i, std::string msg);
+		void		processCommand(Client &client, const std::string &command);
 
 	public:
 		Server(int prt, std::string passw);

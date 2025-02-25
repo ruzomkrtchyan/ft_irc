@@ -3,5 +3,6 @@
 		"locale": "cpp"
 	},
 	"editor.fontSize": 16,
-	"files.autoSave": "afterDelay"
+	"files.autoSave": "afterDelay",
+	"editor.multiCursorModifier": "ctrlCmd"
 }
