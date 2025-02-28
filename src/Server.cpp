@@ -205,9 +205,7 @@ std::vector<std::string> splitCommand(const std::string &command)
 	std::string token;
 
 	while (ss >> token)
-	{
 		args.push_back(token);
-	}
 	return args;
 }
 
