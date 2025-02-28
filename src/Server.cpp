@@ -1,6 +1,7 @@
 #include "Server.hpp"
 
-Server::Server(int prt, std::string passw) : port(prt), password(passw) {
+Server::Server(int prt, std::string passw) : port(prt), password(passw) 
+{
 	Server::create_sock();
 }
 
@@ -105,7 +106,7 @@ void Server::receiving_data(int i)
 		clients.erase(fds[i].fd);
 		fds.erase(fds.begin() + i);
 		std::cout << "The Client disconnected." << std::endl;
-		--i;
+		return;
 	}
 	// Server::client_authentication(i, buffer);
 	// else
@@ -115,10 +116,15 @@ void Server::receiving_data(int i)
 	// 	// send(fds[i].fd, "Message received\n", 17, 0);
 	// }
 	std::string msg(buffer);
-	if (!clients[fds[i].fd].authenticated)
+	Client &client = clients[fds[i].fd];
+	if (!client.authenticated)
 		Server::client_authentication(i, msg);
-	else if (clients[fds[i].fd].nickname.empty())
+	else if (client.nickname.empty())
 		Server::client_nickname(i, msg);
+	else if (client.username.empty())
+		Server::client_username(i, msg);
+	else
+		Server::processCommand(client, msg);
 }
 
 // void Server::handle_msg(int i, std::string msg)
@@ -191,3 +197,68 @@ void Server::client_nickname(int i, std::string msg)
 		send(client_fd, "You must set your nickname using NICK <name>\n", 44, 0);
 	}
 }	
+
+std::vector<std::string> splitCommand(const std::string &command)
+{
+	std::vector<std::string> args;
+	std::stringstream ss(command);
+	std::string token;
+
+	while (ss >> token)
+	{
+		args.push_back(token);
+	}
+	return args;
+}
+
+void Server::processCommand(Client &client, const std::string &command)
+{
+	std::vector<std::string> args = splitCommand(command);
+	if (args.empty()) return;
+
+	if (args[0] == "NICK")
+		client_nickname(client.getFd(), args[1]);
+	else if (args[0] == "USER")
+		client_username(client.getFd(), args[1]);
+	else if (!client.isFullyRegistered()){
+		send(client.getFd(), "451 :You have not registered\r\n", 32, 0);
+	} else {
+		// Handle other commands here
+	}
+}
+
+void Server::client_username(int i, std::string msg)
+{
+    int client_fd = fds[i].fd;
+
+    if (msg.find("USER ") == 0)
+    {
+        std::string params = msg.substr(5);
+        size_t first_space = params.find(' ');
+        size_t second_space = params.find(' ', first_space + 1);
+        size_t third_space = params.find(' ', second_space + 1);
+
+        if (first_space == std::string::npos || second_space == std::string::npos || third_space == std::string::npos)
+        {
+            send(client_fd, "ERROR: Invalid USER format. Use USER <username> 0 * <realname>\n", 61, 0);
+            return;
+        }
+
+        clients[client_fd].username = params.substr(0, first_space);
+        clients[client_fd].realname = params.substr(third_space + 1);
+
+        if (!clients[client_fd].nickname.empty())
+        {
+            send(client_fd, "Welcome to the IRC Server!\n", 28, 0);
+            std::cout << "User registered: " << clients[client_fd].nickname << " (" << clients[client_fd].username << ")" << std::endl;
+        }
+        else
+        {
+            send(client_fd, "USER info received. Now enter your nickname using NICK <name>\n", 59, 0);
+        }
+    }
+    else
+    {
+        send(client_fd, "You must send USER <username> 0 * <realname>\n", 45, 0);
+    }
+}
