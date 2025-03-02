@@ -151,13 +151,13 @@ void Server::client_authentication(int i, std::string msg)
 			if (pass == password)
 			{
 				clients[fds[i].fd].authenticated = true;
-				send(fds[i].fd, "Password accepted. Please enter NICK <yournickname>\n", 52, 0);
+				send(fds[i].fd, "Password accepted. Please enter NICK <yournickname> \n", 53, 0);
 			}
 			else
 			{
 				if (retry < 3)
 				{
-					send(fds[i].fd, "Incorrect password, please enter PASS <password> ", 49, 0);
+					send(fds[i].fd, "Incorrect password, please enter PASS <password> \n", 50, 0);
 					retry++;
 				}
 				else
