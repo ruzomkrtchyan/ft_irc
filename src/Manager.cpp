@@ -1,0 +1,22 @@
+#include "Manager.hpp"
+
+Manager::Manager()
+{
+	commands["PASS"] = new Pass();
+	commands["NICK"] =  new Nick();
+	// commands["USER"] =  new USER();
+}
+
+Manager::~Manager()
+{
+	for(std::map<std::string, Command*>::iterator it = commands.begin(); it != commands.end(); ++it)
+		delete it->second;
+}
+
+void Manager::execute(std::string &command, Client &client, Server &serv, std::vector<std::string> args)
+{
+	if(commands.find(command) != commands.end())
+		commands[command]->execute(serv, client, args);
+	else
+		send(client.getFd(), "ERROR: Unknown command\r\n", 24, 0);
+}

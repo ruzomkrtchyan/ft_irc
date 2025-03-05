@@ -117,86 +117,79 @@ void Server::receiving_data(int i)
 	// }
 	std::string msg(buffer);
 	Client &client = clients[fds[i].fd];
-	if (!client.authenticated)
-		Server::client_authentication(i, msg);
-	else if (client.nickname.empty())
-		Server::client_nickname(i, msg);
-	else if (client.username.empty())
-		Server::client_username(i, msg);
-	else
-		Server::processCommand(client, msg);
+	// if (!client.authenticated)
+	// 	Server::client_authentication(i, msg);
+	// else if (client.nickname.empty())
+	// 	Server::client_nickname(i, msg);
+	// else if (client.username.empty())
+	// 	Server::client_username(i, msg);
+	// else
+	Server::handle_msg(client, msg);
 }
 
-// void Server::handle_msg(int i, std::string msg)
-// {}
-
-std::string Server::trim_p(std::string pass)
+void Server::handle_msg(Client &client, std::string msg)
 {
-	size_t start = pass.find_first_not_of(" \t\n\r");
-	size_t end = pass.find_last_not_of(" \t\n\r");
+	std::vector<std::string> args = splitCommand(msg);
+	if (args.empty()) return;
 
-	if (start == std::string::npos || end == std::string::npos)
-		return "";
-	return (pass.substr(start, end - start + 1));
+	std::string cmd = args[0];
+	Manager.execute(cmd, *this, client, args)
+// 	if (args[0] == "NICK")
+// 		client_nickname(client.getFd(), args[1]);
+// 	else if (args[0] == "USER")
+// 		client_username(client.getFd(), args[1]);
+// 	else if (!client.isFullyRegistered()){
+// 		send(client.getFd(), "451 :You have not registered\r\n", 32, 0);
+// 	} else {
+// 		// Handle other commands here
+// 	}
 }
 
-void Server::client_authentication(int i, std::string msg)
-{
-	if (clients[fds[i].fd].authenticated == false)
-	{
-		if (msg.find("PASS ") == 0)
-		{
-			int	retry = 0;
-			std::string pass = Server::trim_p(msg.substr(5));
-			if (pass == password)
-			{
-				clients[fds[i].fd].authenticated = true;
-				send(fds[i].fd, "Password accepted. Please enter NICK <yournickname> \n", 53, 0);
-			}
-			else
-			{
-				if (retry < 3)
-				{
-					send(fds[i].fd, "Incorrect password, please enter PASS <password> \n", 50, 0);
-					retry++;
-				}
-				else
-				{
-					send(fds[i].fd, "Incorrect password. Connection closing.\n", 40, 0);
-					close(fds[i].fd);
-					clients.erase(fds[i].fd);
-					fds.erase(fds.begin() + i);
-				}
-			}
-		}
-		else
-			send(fds[i].fd, "You must send PASS <password> first.\n", 38, 0);
-	}
-}
+// std::string Server::trim_p(std::string pass)
+// {
+// 	size_t start = pass.find_first_not_of(" \t\n\r");
+// 	size_t end = pass.find_last_not_of(" \t\n\r");
 
-void Server::client_nickname(int i, std::string msg)
-{
-	int client_fd = fds[i].fd;
+// 	if (start == std::string::npos || end == std::string::npos)
+// 		return "";
+// 	return (pass.substr(start, end - start + 1));
+// }
 
-	if (msg.find("NICK ") == 0)
-	{
-		std::string nickname = Server::trim_p(msg.substr(5));
-		if (!nickname.empty())
-		{
-			clients[client_fd].nickname = nickname;
-			send(client_fd, "Nickname set successfully! Welcome!\n", 36, 0);
-			std::cout << "Client " << client_fd << " set nickname: " << nickname << std::endl;
-		}
-		else
-		{
-			send(client_fd, "Invalid nickname. Please try again.\n", 35, 0);
-		}
-	}
-	else
-	{
-		send(client_fd, "You must set your nickname using NICK <name>\n", 44, 0);
-	}
-}	
+// void Server::client_authentication(int i, std::string msg)
+// {
+// 	if (clients[fds[i].fd].authenticated == false)
+// 	{
+// 		if (msg.find("PASS ") == 0)
+// 		{
+// 			int	retry = 0;
+// 			std::string pass = Server::trim_p(msg.substr(5));
+// 			if (pass == password)
+// 			{
+// 				clients[fds[i].fd].authenticated = true;
+// 				send(fds[i].fd, "Password accepted. Please enter NICK <yournickname> \n", 53, 0);
+// 			}
+// 			else
+// 			{
+// 				if (retry < 3)
+// 				{
+// 					send(fds[i].fd, "Incorrect password, please enter PASS <password> \n", 50, 0);
+// 					retry++;
+// 				}
+// 				else
+// 				{
+// 					send(fds[i].fd, "Incorrect password. Connection closing.\n", 40, 0);
+// 					close(fds[i].fd);
+// 					clients.erase(fds[i].fd);
+// 					fds.erase(fds.begin() + i);
+// 				}
+// 			}
+// 		}
+// 		else
+// 			send(fds[i].fd, "You must send PASS <password> first.\n", 38, 0);
+// 	}
+// }
+
+
 
 std::vector<std::string> splitCommand(const std::string &command)
 {
@@ -209,54 +202,59 @@ std::vector<std::string> splitCommand(const std::string &command)
 	return args;
 }
 
-void Server::processCommand(Client &client, const std::string &command)
+// void Server::processCommand(Client &client, const std::string &command)
+// {
+// 	std::vector<std::string> args = splitCommand(command);
+// 	if (args.empty()) return;
+
+// 	if (args[0] == "NICK")
+// 		client_nickname(client.getFd(), args[1]);
+// 	else if (args[0] == "USER")
+// 		client_username(client.getFd(), args[1]);
+// 	else if (!client.isFullyRegistered()){
+// 		send(client.getFd(), "451 :You have not registered\r\n", 32, 0);
+// 	} else {
+// 		// Handle other commands here
+// 	}
+// }
+
+// void Server::client_username(int i, std::string msg)
+// {
+//     int client_fd = fds[i].fd;
+
+//     if (msg.find("USER ") == 0)
+//     {
+//         std::string params = msg.substr(5);
+//         size_t first_space = params.find(' ');
+//         size_t second_space = params.find(' ', first_space + 1);
+//         size_t third_space = params.find(' ', second_space + 1);
+
+//         if (first_space == std::string::npos || second_space == std::string::npos || third_space == std::string::npos)
+//         {
+//             send(client_fd, "ERROR: Invalid USER format. Use USER <username> 0 * <realname>\n", 61, 0);
+//             return;
+//         }
+
+//         clients[client_fd].username = params.substr(0, first_space);
+//         clients[client_fd].realname = params.substr(third_space + 1);
+
+//         if (!clients[client_fd].nickname.empty())
+//         {
+//             send(client_fd, "Welcome to the IRC Server!\n", 28, 0);
+//             std::cout << "User registered: " << clients[client_fd].nickname << " (" << clients[client_fd].username << ")" << std::endl;
+//         }
+//         else
+//         {
+//             send(client_fd, "USER info received. Now enter your nickname using NICK <name>\n", 59, 0);
+//         }
+//     }
+//     else
+//     {
+//         send(client_fd, "You must send USER <username> 0 * <realname>\n", 45, 0);
+//     }
+// }
+
+std::string	Server::getPassword()
 {
-	std::vector<std::string> args = splitCommand(command);
-	if (args.empty()) return;
-
-	if (args[0] == "NICK")
-		client_nickname(client.getFd(), args[1]);
-	else if (args[0] == "USER")
-		client_username(client.getFd(), args[1]);
-	else if (!client.isFullyRegistered()){
-		send(client.getFd(), "451 :You have not registered\r\n", 32, 0);
-	} else {
-		// Handle other commands here
-	}
-}
-
-void Server::client_username(int i, std::string msg)
-{
-    int client_fd = fds[i].fd;
-
-    if (msg.find("USER ") == 0)
-    {
-        std::string params = msg.substr(5);
-        size_t first_space = params.find(' ');
-        size_t second_space = params.find(' ', first_space + 1);
-        size_t third_space = params.find(' ', second_space + 1);
-
-        if (first_space == std::string::npos || second_space == std::string::npos || third_space == std::string::npos)
-        {
-            send(client_fd, "ERROR: Invalid USER format. Use USER <username> 0 * <realname>\n", 61, 0);
-            return;
-        }
-
-        clients[client_fd].username = params.substr(0, first_space);
-        clients[client_fd].realname = params.substr(third_space + 1);
-
-        if (!clients[client_fd].nickname.empty())
-        {
-            send(client_fd, "Welcome to the IRC Server!\n", 28, 0);
-            std::cout << "User registered: " << clients[client_fd].nickname << " (" << clients[client_fd].username << ")" << std::endl;
-        }
-        else
-        {
-            send(client_fd, "USER info received. Now enter your nickname using NICK <name>\n", 59, 0);
-        }
-    }
-    else
-    {
-        send(client_fd, "You must send USER <username> 0 * <realname>\n", 45, 0);
-    }
+	return password;
 }

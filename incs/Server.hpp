@@ -38,6 +38,7 @@ class Server
 
 	public:
 		Server(int prt, std::string passw);
+		std::string	getPassword();
 		void		connect();
 };
 

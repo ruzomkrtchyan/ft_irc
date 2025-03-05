@@ -3,9 +3,8 @@
 
 class Nick : public Command
 {
-    public:
-        void execute();
-
+	public:
+		void execute(Server &serv, Client &client, const std::vector<std::string>& args);
 };
 
 #endif
