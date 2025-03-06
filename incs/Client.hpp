@@ -30,6 +30,7 @@ class Client
 
 		void	setNickname(const std::string &nick);
 		void	setUsername(const std::string &user);
+		void	setRealname(const std::string &name);
 		void 	authenticate();
 		void	registerClient();
 };

@@ -53,6 +53,11 @@ void Client::setUsername(const std::string &user)
 	username = user;
 }
 
+void Client::setRealname(const std::string &name)
+{
+	realname = name;
+}
+
 void Client::authenticate()
 { 
 	authenticated = true; 

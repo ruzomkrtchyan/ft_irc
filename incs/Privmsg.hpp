@@ -1,11 +1,11 @@
-#ifndef NICK_HPP
-#define NICK_HPP
+#ifndef PRIVMSG_HPP
+#define PRIVMSG_HPP
 
 #include "Command.hpp"
 
-class Nick : public Command
+class Privmsg : public Command
 {
-	public:
+    public:
 		void execute(Server &serv, Client &client, const std::vector<std::string>& args);
 };
 

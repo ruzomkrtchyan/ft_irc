@@ -4,7 +4,10 @@
 #include <iostream> 
 #include <map>
 #include "Server.hpp"
-#include "Command.hpp"
+#include "Nick.hpp"
+#include "Pass.hpp"
+
+class Command;
 
 class Manager
 {
@@ -13,7 +16,7 @@ class Manager
 	public:
 		Manager();
 		~Manager();
-		void execute(std::string &command, Server &serv, Client &client, std::vector<std::string> args);
+		void execute(std::string &command, Client &client, Server &serv, std::vector<std::string> args);
 };
 
 #endif

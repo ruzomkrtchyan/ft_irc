@@ -15,6 +15,15 @@ Manager::~Manager()
 
 void Manager::execute(std::string &command, Client &client, Server &serv, std::vector<std::string> args)
 {
+	if (!client.isFullyRegistered())
+	{
+		if( command != "PASS" && command != "NICK" && command != "USER")
+		{
+			send(client.getFd(), "451 :You have not registered. Use PASS, NICK, and USER.\r\n", 60, 0);
+            return;
+		}
+	}
+	
 	if(commands.find(command) != commands.end())
 		commands[command]->execute(serv, client, args);
 	else

@@ -2,12 +2,11 @@
 
 void Pass:execute(Server &serv, Client &client, const std::vector<std::string>& args)
 {
-    if (client.authenticated)
+    if (client.isAuth())
     {
         send(client.getFd(), "You are already authenticated.\n", 32, 0);
         return;
     }
-
     if (args.size() < 2)
     {
         send(client.getFd(), "Usage: PASS <password>\n", 23, 0);

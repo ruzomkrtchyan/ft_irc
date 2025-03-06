@@ -1,7 +1,6 @@
 #ifndef COMMAND_HPP
 #define COMMAND_HPP
 
-#include "Client.hpp"
 #include "Server.hpp"
 
 class Client;

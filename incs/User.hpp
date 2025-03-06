@@ -1,11 +1,11 @@
-#ifndef PASS_HPP
-#define PASS_HPP
+#ifndef USER_HPP
+#define USER_HPP
 
 #include "Command.hpp"
 
-class Pass : public Command
+class User : public Command
 {
-     public:
+    public:
         void execute(Server &serv, Client &client, const std::vector<std::string>& args);
 };
 
