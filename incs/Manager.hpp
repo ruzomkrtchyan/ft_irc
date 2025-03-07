@@ -8,6 +8,7 @@
 #include "Pass.hpp"
 
 class Command;
+class Server;
 
 class Manager
 {

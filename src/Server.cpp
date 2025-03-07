@@ -127,6 +127,17 @@ void Server::receiving_data(int i)
 	Server::handle_msg(client, msg);
 }
 
+std::vector<std::string> splitCommand(const std::string &command)
+{
+	std::vector<std::string> args;
+	std::stringstream ss(command);
+	std::string token;
+
+	while (ss >> token)
+		args.push_back(token);
+	return args;
+}
+
 void Server::handle_msg(Client &client, std::string msg)
 {
 	std::vector<std::string> args = splitCommand(msg);
@@ -190,17 +201,6 @@ void Server::handle_msg(Client &client, std::string msg)
 // }
 
 
-
-std::vector<std::string> splitCommand(const std::string &command)
-{
-	std::vector<std::string> args;
-	std::stringstream ss(command);
-	std::string token;
-
-	while (ss >> token)
-		args.push_back(token);
-	return args;
-}
 
 // void Server::processCommand(Client &client, const std::string &command)
 // {

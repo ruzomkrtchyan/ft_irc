@@ -14,6 +14,7 @@
 #include <map>
 #include <sstream>
 #include "Client.hpp"
+#include "Manager.hpp"
 
 class Client;
 class Channel;
@@ -35,6 +36,7 @@ class Server
 		void		client_nickname(int i, std::string msg);
 		void		client_username(int i, std::string msg);
 		void		processCommand(Client &client, const std::string &command);
+		void		handle_msg(Client &client, std::string msg);
 
 	public:
 		Server(int prt, std::string passw);

@@ -5,8 +5,9 @@
 
 class Pass : public Command
 {
-     public:
+    public:
+        Pass();
+        ~Pass();
         void execute(Server &serv, Client &client, const std::vector<std::string>& args);
 };
-
 #endif

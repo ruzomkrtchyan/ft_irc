@@ -1,6 +1,9 @@
+#include "Nick.hpp"
 
 void Nick::execute(Server &serv, Client &client, const std::vector<std::string>& args)
 {
+	(void)serv; //for make
+
 	if (!client.isAuth())
 	{
 		send(client.getFd(), "You must authenticate first with PASS.\n", 40, 0);
@@ -10,7 +13,7 @@ void Nick::execute(Server &serv, Client &client, const std::vector<std::string>&
 	{
 		client.setNickname(args[1]); //should set clients.nickname also
 		send(client.getFd(), "Nickname set successfully! Welcome!\n", 36, 0);
-		std::cout << "Client " << client.sockfd << " set nickname: " << nickname << std::endl;
+		std::cout << "Client " << client.sockfd << " set nickname: " << client.getNickname() << std::endl;
 	}
 	else
 		send(client.getFd(), "Invalid nickname. Please try again.\n", 35, 0);
