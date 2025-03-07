@@ -10,4 +10,5 @@ class Pass : public Command
         ~Pass();
         void execute(Server &serv, Client &client, const std::vector<std::string>& args);
 };
+
 #endif

@@ -14,19 +14,19 @@
 #include <map>
 #include <sstream>
 #include "Client.hpp"
-#include "Manager.hpp"
+// #include "Manager.hpp"
 
-class Client;
-class Channel;
+class Manager;
 
 class Server
 {
 	private:
-		int		 port;
-		int		 sockfd;
-		std::string password;
-		std::vector<struct pollfd> fds;
-		std::map<int, Client> clients;
+		int		 					port;
+		int							sockfd;
+		std::string					password;
+		std::vector<struct pollfd>	fds;
+		std::map<int, Client>		clients;
+		Manager						*cmdManager;
 
 		void		create_sock();
 		void		new_client();
@@ -40,6 +40,7 @@ class Server
 
 	public:
 		Server(int prt, std::string passw);
+		~Server();
 		std::string	getPassword();
 		void		connect();
 };

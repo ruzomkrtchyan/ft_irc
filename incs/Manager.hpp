@@ -3,7 +3,6 @@
 
 #include <iostream> 
 #include <map>
-#include "Server.hpp"
 #include "Nick.hpp"
 #include "Pass.hpp"
 
@@ -17,7 +16,7 @@ class Manager
 	public:
 		Manager();
 		~Manager();
-		void execute(std::string &command, Client &client, Server &serv, std::vector<std::string> args);
+		void execute(std::string &command, Server &serv, Client &client, std::vector<std::string> args);
 };
 
 #endif

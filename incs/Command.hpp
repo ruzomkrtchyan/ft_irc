@@ -3,8 +3,6 @@
 
 #include "Server.hpp"
 
-class Client;
-class Server;
 
 class Command
 {

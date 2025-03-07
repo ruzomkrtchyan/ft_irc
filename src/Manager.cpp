@@ -1,4 +1,5 @@
 #include "Manager.hpp"
+#include "Server.hpp"
 
 Manager::Manager()
 {
@@ -13,7 +14,7 @@ Manager::~Manager()
 		delete it->second;
 }
 
-void Manager::execute(std::string &command, Client &client, Server &serv, std::vector<std::string> args)
+void Manager::execute(std::string &command, Server &serv, Client &client, std::vector<std::string> args)
 {
 	if (!client.isFullyRegistered())
 	{
