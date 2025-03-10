@@ -5,6 +5,7 @@
 #include <map>
 #include "Nick.hpp"
 #include "Pass.hpp"
+#include "User.hpp"
 
 class Command;
 class Server;

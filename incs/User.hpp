@@ -6,6 +6,9 @@
 class User : public Command
 {
     public:
+        User();
+        ~User();
+        
         void execute(Server &serv, Client &client, const std::vector<std::string>& args);
 };
 

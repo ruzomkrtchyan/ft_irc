@@ -1,5 +1,11 @@
 #include "User.hpp"
 
+User::User()
+{}
+
+User::~User()
+{}
+
 void User::execute(Server &serv, Client &client, const std::vector<std::string>& args)
 {
 	(void)serv;
