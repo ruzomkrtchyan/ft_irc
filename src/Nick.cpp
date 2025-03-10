@@ -1,5 +1,11 @@
 #include "Nick.hpp"
 
+Nick::Nick()
+{}
+
+Nick::~Nick()
+{}
+
 void Nick::execute(Server &serv, Client &client, const std::vector<std::string>& args)
 {
 	(void)serv; //for make

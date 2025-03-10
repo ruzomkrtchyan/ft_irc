@@ -1,5 +1,11 @@
 #include "Pass.hpp"
 
+Pass::Pass()
+{}
+
+Pass::~Pass()
+{}
+
 void Pass::execute(Server &serv, Client &client, const std::vector<std::string>& args)
 {
     if (client.isAuth())

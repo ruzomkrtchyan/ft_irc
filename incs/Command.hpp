@@ -3,7 +3,6 @@
 
 #include "Server.hpp"
 
-
 class Command
 {
     public:
