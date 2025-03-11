@@ -8,7 +8,7 @@ User::~User()
 
 void User::execute(Server &serv, Client &client, const std::vector<std::string>& args)
 {
-	(void)serv;
+	(void) serv;
 	if (!client.isAuth())
 	{
 		send(client.getFd(), "You must authenticate first with PASS.\n", 40, 0);

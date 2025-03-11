@@ -2,6 +2,7 @@
 #define COMMAND_HPP
 
 #include "Server.hpp"
+#include "replice.hpp"
 
 class Command
 {

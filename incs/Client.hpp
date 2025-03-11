@@ -25,6 +25,7 @@ class Client
 		std::string	getIp() const;
 		std::string	getNickname() const;
 		std::string getUsername() const;
+		std::string getPrefix() const; //cpp fileum implementel
 		bool	isAuth() const;
 		bool	isFullyRegistered() const;
 
@@ -33,6 +34,7 @@ class Client
 		void	setRealname(const std::string &name);
 		void 	authenticate();
 		void	registerClient();
+		void	sendMessage(const std::string& message);
 };
 
 #endif

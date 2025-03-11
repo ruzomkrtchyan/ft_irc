@@ -14,6 +14,7 @@
 #include <map>
 #include <sstream>
 #include "Client.hpp"
+#include "Channel.hpp"
 // #include "Manager.hpp"
 
 class Manager;
@@ -21,12 +22,13 @@ class Manager;
 class Server
 {
 	private:
-		int		 					port;
-		int							sockfd;
-		std::string					password;
-		std::vector<struct pollfd>	fds;
-		std::map<int, Client>		clients;
-		Manager						*cmdManager;
+		int		 						port;
+		int								sockfd;
+		std::string						password;
+		std::vector<struct pollfd>		fds;
+		std::map<int, Client>			clients;
+		std::map<std::string, Channel*>	_channels;
+		Manager							*cmdManager;
 
 		void		create_sock();
 		void		new_client();
@@ -43,6 +45,9 @@ class Server
 		~Server();
 		std::string	getPassword();
 		void		connect();
+
+		Channel* getChannel(const std::string& name);
+		Channel* createChannel(const std::string& name, Client& creator);
 };
 
 #endif
