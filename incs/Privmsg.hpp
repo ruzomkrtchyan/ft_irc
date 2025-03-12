@@ -5,7 +5,9 @@
 
 class Privmsg : public Command
 {
-    public:
+		public:
+		Privmsg();
+		~Privmsg();
 		void execute(Server &serv, Client &client, const std::vector<std::string>& args);
 };
 

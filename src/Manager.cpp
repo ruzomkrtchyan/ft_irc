@@ -4,8 +4,10 @@
 Manager::Manager()
 {
 	commands["PASS"] = new Pass();
-	commands["NICK"] =  new Nick();
-	commands["USER"] =  new User();
+	commands["NICK"] = new Nick();
+	commands["USER"] = new User();
+	commands["JOIN"] = new Join();
+	commands["PRIVMSG"] = new Privmsg();
 }
 
 Manager::~Manager()
