@@ -6,10 +6,11 @@
 
 class Join : public Command
 {
-    Join();
-    ~Join();
+    public:
+        Join();
+        ~Join();
 
-    void execute(Server &serv, Client &client, const std::vector<std::string>& args);
+        void execute(Server &serv, Client &client, const std::vector<std::string>& args);
 };
 
 #endif

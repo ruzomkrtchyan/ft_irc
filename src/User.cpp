@@ -21,7 +21,12 @@ void User::execute(Server &serv, Client &client, const std::vector<std::string>&
 	}
 	if (args.size() < 5)
 	{
-		send(client.getFd(), "ERROR: Invalid USER format. Usage: USER <username> 0 * <realname>\n", 65, 0);
+		send(client.getFd(), "ERROR: Invalid USER format. Usage: USER <username> 0 * <realname>\n", 66, 0);
+		return;
+	}
+	if (args[2]!= "0" || args[3] != "*")
+	{
+		send(client.getFd(), "ERROR: Invalid USER format. Usage: USER <username> 0 * <realname>\n", 66, 0);
 		return;
 	}
 
