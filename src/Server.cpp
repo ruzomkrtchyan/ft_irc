@@ -143,3 +143,19 @@ std::string	Server::getPassword()
 {
 	return password;
 }
+
+
+Channel* Server::getChannel(const std::string& name)
+{
+	std::map<std::string, Channel*>::iterator it = _channels.find(name);
+	if (it != _channels.end())
+		return it->second;
+	return nullptr;
+}
+
+Channel* Server::createChannel(const std::string& name, Client& creator)
+{
+	Channel* newChannel = new Channel(name, creator);
+	_channels[name] = newChannel;
+	return newChannel;
+}

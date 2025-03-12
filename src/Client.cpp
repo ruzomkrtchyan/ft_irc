@@ -33,6 +33,11 @@ std::string Client::getUsername() const
 	return username;
 }
 
+std::string Client::getPrefix() const
+{
+    return nickname + "!" + username + "@" + ip_address;
+}
+
 bool Client::isAuth() const
 { 
 	return authenticated;
@@ -66,4 +71,10 @@ void Client::authenticate()
 void Client::registerClient() 
 {
 	isRegistered = true;
+}
+
+
+void Client::sendMessage(const std::string& message)
+{
+	send(sockfd, message.c_str(), message.length(), 0);
 }
