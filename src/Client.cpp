@@ -35,7 +35,7 @@ std::string Client::getUsername() const
 
 std::string Client::getPrefix() const
 {
-    return nickname + "!" + username + "@" + ip_address;
+    return nickname + "!" + username + "@" + hostname; 
 }
 
 bool Client::isAuth() const

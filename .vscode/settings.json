@@ -4,5 +4,6 @@
 	},
 	"editor.fontSize": 16,
 	"files.autoSave": "afterDelay",
-	"editor.multiCursorModifier": "ctrlCmd"
+	"editor.multiCursorModifier": "ctrlCmd",
+	"editor.linkedEditing": true
 }

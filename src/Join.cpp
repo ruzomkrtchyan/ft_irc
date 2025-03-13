@@ -16,11 +16,11 @@ void Join::execute(Server &serv, Client &client, const std::vector<std::string>&
 
     std::string channelName = args[0];
 
-    if (channelName.empty() || (channelName[0] != '#' && channelName[0] != '&'))
-    {
-        client.sendMessage(ERR_NOSUCHCHANNEL(client.getNickname(), channelName));
-        return;
-    }
+    // if (channelName.empty() || (channelName[0] != '#' || channelName[0] != '&')) //
+    // {
+    //     client.sendMessage(ERR_NOSUCHCHANNEL(client.getNickname(), channelName));
+    //     return;
+    // }
 
     Channel* channel = serv.getChannel(channelName);
     if (channel && channel->isMember(client))
