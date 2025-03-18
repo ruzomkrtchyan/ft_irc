@@ -45,6 +45,7 @@ class Server
 		~Server();
 		std::string	getPassword();
 		void		connect();
+		Client*		get_client_bynick(std::string nick);
 
 		Channel* getChannel(const std::string& name);
 		Channel* createChannel(const std::string& name, Client& creator);

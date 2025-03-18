@@ -144,13 +144,22 @@ std::string	Server::getPassword()
 	return password;
 }
 
+Client* Server::get_client_bynick(std::string &nick)
+{
+	for (std::map<int, Client>::iterator it = clients.begin(); it != clients.end(); ++it)
+	{
+		if (it->second.getNickname() == nick)
+			return &it->second;
+	}
+	return NULL;
+}
 
 Channel* Server::getChannel(const std::string& name)
 {
 	std::map<std::string, Channel*>::iterator it = _channels.find(name);
 	if (it != _channels.end())
 		return it->second;
-	return nullptr;
+	return NULL;
 }
 
 Channel* Server::createChannel(const std::string& name, Client& creator)

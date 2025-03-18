@@ -6,6 +6,8 @@
 #include "Nick.hpp"
 #include "Pass.hpp"
 #include "User.hpp"
+#include "Join.hpp"
+#include "Privmsg.hpp"
 
 class Command;
 class Server;
