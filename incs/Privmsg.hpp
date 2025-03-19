@@ -8,7 +8,7 @@ class Privmsg : public Command
 		public:
 		Privmsg();
 		~Privmsg();
-		// void execute(Server &serv, Client &client, const std::vector<std::string>& args);
+		void execute(Server &serv, Client &client, const std::vector<std::string>& args);
 };
 
 #endif
