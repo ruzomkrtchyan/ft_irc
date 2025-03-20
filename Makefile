@@ -5,7 +5,7 @@ SRC			= $(wildcard $(SRC_DIR)/*.cpp)
 OBJ_DIR		= obj
 OBJ			= $(patsubst $(SRC_DIR)/%.cpp, $(OBJ_DIR)/%.o, $(SRC))
 
-CC			= c++
+CC			= g++
 CFLAGS		= -Wall -Wextra -Werror -std=c++98 $(INCLUDES)
 INCLUDES	= -Iincs
 MK			= mkdir -p

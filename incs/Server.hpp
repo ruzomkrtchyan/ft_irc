@@ -27,9 +27,8 @@ class Server
 		std::string						password;
 		std::vector<struct pollfd>		fds;
 		std::map<int, Client>			clients;
-		std::map<std::string, Channel*>	_channels;
 		Manager							*cmdManager;
-
+		
 		void		create_sock();
 		void		new_client();
 		void		receiving_data(int i);
@@ -39,13 +38,14 @@ class Server
 		void		client_username(int i, std::string msg);
 		void		processCommand(Client &client, const std::string &command);
 		void		handle_msg(Client &client, std::string msg);
-
-	public:
+		
+		public:
+		std::map<std::string, Channel*>	_channels;
 		Server(int prt, std::string passw);
 		~Server();
 		std::string	getPassword();
 		void		connect();
-		Client*		get_client_bynick(std::string nick);
+		Client*		get_client_bynick(std::string &nick);
 
 		Channel* getChannel(const std::string& name);
 		Channel* createChannel(const std::string& name, Client& creator);

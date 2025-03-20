@@ -17,7 +17,7 @@ void Privmsg::execute(Server &serv, Client &client, const std::vector<std::strin
 	std::string target = args[1];
 
 	std::string msg;
-	if (args[2][0] == ":")
+	if (args[2][0] == ':')
 	{
 		msg = args[2].substr(1);
 		for (size_t i = 3; i < args.size(); ++i)
@@ -32,7 +32,7 @@ void Privmsg::execute(Server &serv, Client &client, const std::vector<std::strin
 		return;
 	}
 
-	if (target[0] == "#")
+	if (target[0] == '#')
 	{
 		if (serv._channels.find(target) == serv._channels.end())
 		{
@@ -40,16 +40,16 @@ void Privmsg::execute(Server &serv, Client &client, const std::vector<std::strin
 			return;
 		}
 
-		Channel &chn = serv._channels[target];
+		Channel *chn = serv._channels[target];
 	 
-		if (!chn.isMember(client))
+		if (!chn->isMember(client))
 		{
 			client.sendMessage(ERR_NOTONCHANNEL(client.getNickname(), "PRIVMSG"));
 			return;
 		}
 
 		std::string ch_msg = ":" + client.getNickname() + " PRIVMSG " + target + " " + msg + "\n";
-		chn.broadcast(ch_msg, chn);
+		chn->broadcast(ch_msg, client);
 	}
 	else
 	{
@@ -64,7 +64,6 @@ void Privmsg::execute(Server &serv, Client &client, const std::vector<std::strin
 	}
 	
 }
-
 // PRIVMSG <target> :<message>
 // <target> → A nickname (to message a specific user) or a channel (to message a group).
 // <message> → The actual text message.
