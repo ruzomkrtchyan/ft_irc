@@ -48,18 +48,18 @@ void Privmsg::execute(Server &serv, Client &client, const std::vector<std::strin
 			return;
 		}
 
-		std::string ch_msg = ":" + client.getNickname() + " PRIVMSG " + target + " " + msg + "\n";
+		std::string ch_msg = ":" + client.getNickname() + " PRIVMSG " + target + " :" + msg + "\n";
 		chn->broadcast(ch_msg, client);
 	}
 	else
 	{
 		Client* recipient = serv.get_client_bynick(target);
-		if (!recipient)
+		if (!recipient || !recipient->isFullyRegistered())
 		{
 			client.sendMessage(ERR_NOSUCHNICK(client.getNickname(), "PRIVMSG"));
 			return;
 		}
-		std::string u_msg = ":" + client.getNickname() + " PRIVMSG " + target + " " + msg + "\n";
+		std::string u_msg = ":" + client.getNickname() + " PRIVMSG " + target + " :" + msg + "\n";
 		send(recipient->getFd(), u_msg.c_str(), u_msg.size(), 0);
 	}
 	

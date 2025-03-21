@@ -18,7 +18,7 @@
 #define RPL_ENDOFNAMES(name, ch)                "366 " + name +  " " + ch + " :End of /NAMES list"
 
 // Error replies 
-#define ERR_NOSUCHNICK(source, command)         "401 " + source + " " + command + " :No such nick/channel"
+#define ERR_NOSUCHNICK(source, command)         "401 " + source + " " + command + " :No such nick/channel\n"
 #define ERR_NOSUCHCHANNEL(source, command)      "403 " + source + " " + command + " :No such channel"
 #define ERR_CANNOTSENDTOCHAN(source, command)   "404 " + source + " " + command + " :Cannot send to channel"
 #define ERR_NORECIPIENT(source, command)        "411 " + source + " :No recipient given (" + command + ")"
