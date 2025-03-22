@@ -1,5 +1,6 @@
 #include "Channel.hpp"
 
+
 Channel::Channel(const std::string& name, Client& creator) : _name(name)
 {
     addMember(creator);

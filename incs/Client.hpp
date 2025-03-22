@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include <netinet/in.h>
+#include <netdb.h>
 #include <arpa/inet.h>
 
 class Client
@@ -25,7 +26,8 @@ class Client
 		std::string	getIp() const;
 		std::string	getNickname() const;
 		std::string getUsername() const;
-		std::string getPrefix() const; //cpp fileum implementel
+		std::string getPrefix(const Client &client); //cpp fileum implementel
+		std::string resolveHostname(const std::string &ip);
 		bool	isAuth() const;
 		bool	isFullyRegistered() const;
 
