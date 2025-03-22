@@ -19,7 +19,7 @@ void Server::create_sock()
 		std::cerr << "Failed to create a socket!" << std::endl;
 		exit(1); 
 	}
-
+	std::cout << sockfd << std::endl;
 	// Need to to set the socket to non-blocking
 	fcntl(sockfd, F_SETFL, O_NONBLOCK);
 	

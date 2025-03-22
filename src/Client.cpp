@@ -33,9 +33,22 @@ std::string Client::getUsername() const
 	return username;
 }
 
-std::string Client::getPrefix() const
+std::string Client::resolveHostname(const std::string &ip) {
+    struct sockaddr_in sa;
+    sa.sin_family = AF_INET;
+    sa.sin_addr.s_addr = inet_addr(ip.c_str());
+
+    struct hostent *host = gethostbyaddr((const void *)&sa.sin_addr, sizeof(sa.sin_addr), AF_INET);
+    if (host && host->h_name) {
+        return std::string(host->h_name);
+    }
+    return ip;  // Return IP if hostname resolution fails
+}
+
+std::string Client::getPrefix(const Client &client)
 {
-    return nickname + "!" + username + "@" + ip_address;
+	std::string hostname = resolveHostname(client.getIp());
+    return nickname + "!" + username + "@" + hostname;
 }
 
 bool Client::isAuth() const
