@@ -1,4 +1,4 @@
-#include "Privmsg.hpp"
+#include "Command.hpp"
 
 Privmsg::Privmsg()
 {}

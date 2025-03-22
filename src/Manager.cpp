@@ -22,7 +22,7 @@ void Manager::execute(std::string &command, Server &serv, Client &client, std::v
 	{
 		if( command != "PASS" && command != "NICK" && command != "USER")
 		{
-			send(client.getFd(), "451 :You have not registered. Use PASS, NICK, and USER.\r\n", 58, 0);
+			send(client.getFd(), "451 :You have not registered. Use PASS, NICK, and USER.\r\n", 57, 0);
             return;
 		}
 	}
@@ -30,5 +30,5 @@ void Manager::execute(std::string &command, Server &serv, Client &client, std::v
 	if(commands.find(command) != commands.end())
 		commands[command]->execute(serv, client, args);
 	else
-		send(client.getFd(), "ERROR: Unknown command\r\n", 25, 0);
+		send(client.getFd(), "ERROR: Unknown command\r\n", 24, 0);
 }

@@ -15,6 +15,8 @@
 #include <sstream>
 #include "Client.hpp"
 #include "Channel.hpp"
+#include <errno.h>
+#include <stdio.h>
 // #include "Manager.hpp"
 
 class Manager;
@@ -45,6 +47,7 @@ class Server
 		~Server();
 		std::string	getPassword();
 		void		connect();
+		void		removeClient(Client& client);
 		Client*		get_client_bynick(std::string &nick);
 
 		Channel* getChannel(const std::string& name);

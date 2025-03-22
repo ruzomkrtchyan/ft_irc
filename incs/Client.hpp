@@ -14,6 +14,7 @@ class Client
 		int			authRetries;
 		bool		authenticated;
 		bool		isRegistered;
+		bool		is_operator;
 		std::string nickname;
 		std::string username;
 		std::string realname;
@@ -30,10 +31,12 @@ class Client
 		std::string resolveHostname(const std::string &ip);
 		bool	isAuth() const;
 		bool	isFullyRegistered() const;
+		bool	isOperator() const;
 
 		void	setNickname(const std::string &nick);
 		void	setUsername(const std::string &user);
 		void	setRealname(const std::string &name);
+		void	setOperator();
 		void 	authenticate();
 		void	registerClient();
 		void	sendMessage(const std::string& message);

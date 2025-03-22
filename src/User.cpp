@@ -1,4 +1,4 @@
-#include "User.hpp"
+#include "Command.hpp"
 
 User::User()
 {}
@@ -11,17 +11,17 @@ void User::execute(Server &serv, Client &client, const std::vector<std::string>&
 	(void) serv;
 	if (!client.isAuth())
 	{
-		send(client.getFd(), "You must authenticate first with PASS.\n", 40, 0);
+		send(client.getFd(), "You must authenticate first with PASS.\n", 39, 0);
 		return;
 	}
 	if (client.getNickname().empty())
 	{
-		send(client.getFd(), "You must set a nickname first with NICK.\n", 42, 0);
+		send(client.getFd(), "You must set a nickname first with NICK.\n", 41, 0);
         return;
 	}
 	if (args.size() < 5)
 	{
-		send(client.getFd(), "ERROR: Invalid USER format. Usage: USER <username> 0 * <realname>\n", 67, 0);
+		send(client.getFd(), "ERROR: Invalid USER format. Usage: USER <username> 0 * <realname>\n", 66, 0);
 		return;
 	}
 
@@ -29,5 +29,5 @@ void User::execute(Server &serv, Client &client, const std::vector<std::string>&
 	client.setRealname(args[4]);
 
 	client.registerClient();
-	send(client.getFd(), "Registration complete! Welcome to the IRC Server.\n", 51, 0);
+	send(client.getFd(), "Registration complete! Welcome to the IRC Server.\n", 50, 0);
 }

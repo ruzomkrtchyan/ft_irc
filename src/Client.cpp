@@ -1,6 +1,6 @@
 #include "Client.hpp"
 
-Client::Client() : sockfd(-1), authRetries(0), authenticated(false), isRegistered(false), ip_address("0.0.0.0") {}
+Client::Client() : sockfd(-1), isoperator(false), authRetries(0), authenticated(false), isRegistered(false), ip_address("0.0.0.0") {}
 
 Client::Client(int fd, struct sockaddr_in client_addr)
 	: sockfd(fd), authRetries(0), authenticated(false), nickname(""), username(""), realname("")
@@ -61,6 +61,12 @@ bool Client::isFullyRegistered() const
 	return isRegistered;
 }
 
+bool	Client::isOperator() const
+{
+	return is_operator;
+}
+
+
 void Client::setNickname(const std::string &nick)
 { 
 	nickname = nick;
@@ -74,6 +80,11 @@ void Client::setUsername(const std::string &user)
 void Client::setRealname(const std::string &name)
 {
 	realname = name;
+}
+
+void Client::setOperator()
+{
+	is_operator = true;
 }
 
 void Client::authenticate()

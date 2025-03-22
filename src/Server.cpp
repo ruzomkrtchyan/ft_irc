@@ -168,3 +168,20 @@ Channel* Server::createChannel(const std::string& name, Client& creator)
 	_channels[name] = newChannel;
 	return newChannel;
 }
+
+void Server::removeClient(Client& client) 
+{
+    int fd = client.getFd();
+
+    close(fd);
+    for (size_t i = 0; i < fds.size(); i++)
+	{
+        if (fds[i].fd == fd) 
+		{
+            fds.erase(fds.begin() + i);
+            break;
+        }
+    }
+    clients.erase(fd);
+    std::cout << "Client with FD " << fd << " removed." << std::endl;
+}

@@ -1,4 +1,4 @@
-#include "Pass.hpp"
+#include "Command.hpp"
 
 Pass::Pass()
 {}
@@ -10,7 +10,7 @@ void Pass::execute(Server &serv, Client &client, const std::vector<std::string>&
 {
     if (client.isAuth())
     {
-        send(client.getFd(), "You are already authenticated.\n", 32, 0);
+        send(client.getFd(), "You are already authenticated.\n", 31, 0);
         return;
     }
     if (args.size() < 2)
@@ -22,22 +22,22 @@ void Pass::execute(Server &serv, Client &client, const std::vector<std::string>&
     if (pass == serv.getPassword())
     {
         client.authenticate();
+        client.authRetries = 0;
         send(client.getFd(), "Password accepted. Please enter NICK <yournickname> \n", 53, 0);
+        return;
     }
     else
 	{
-		if (client.authRetries < 3)
+		if (client.authRetries < 2)
 		{
+            client.authRetries++;
 			send(client.getFd(), "Incorrect password, please enter PASS <password> \n", 50, 0);
-			client.authRetries++;
 		}
 		else
 		{
 			send(client.getFd(), "Incorrect password. Connection closing.\n", 40, 0);
-			close(client.getFd());
-            return;
-			// clients.erase(fds[i].fd);
-			// fds.erase(fds.begin() + i);
+            client.authRetries = 0;
+            serv.removeClient(client);
 		}
 	}
 }

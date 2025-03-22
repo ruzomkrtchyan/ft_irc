@@ -1,4 +1,4 @@
-#include "Join.hpp"
+#include "Command.hpp"
 
 Join::Join()
 {}
@@ -24,6 +24,7 @@ void Join::execute(Server &serv, Client &client, const std::vector<std::string>&
     {
         std::cout << "Channel does not exist. Creating a new one..." << std::endl;  // Debugging line
         channel = serv.createChannel(channelName, client);
+        client.setOperator();
     }
 
     if ((channelName[0] != '#' && channelName[0] != '&'))
