@@ -8,6 +8,7 @@ Manager::Manager()
 	commands["USER"] = new User();
 	commands["JOIN"] = new Join();
 	commands["PRIVMSG"] = new Privmsg();
+	commands["KICK"] = new Kick();
 }
 
 Manager::~Manager()

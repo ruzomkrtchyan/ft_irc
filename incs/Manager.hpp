@@ -8,6 +8,7 @@
 #include "User.hpp"
 #include "Join.hpp"
 #include "Privmsg.hpp"
+#include "Kick.hpp"
 
 class Command;
 class Server;
