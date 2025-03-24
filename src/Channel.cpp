@@ -1,7 +1,7 @@
 #include "Channel.hpp"
 
 
-Channel::Channel(const std::string& name, Client& creator) : _name(name)
+Channel::Channel(const std::string& name, Client& creator) : _name(name),inviteOnly(false)
 {
     addMember(creator);
 }
@@ -27,4 +27,19 @@ void Channel::broadcast(const std::string& message, const Client& sender)
 std::string Channel::getTopic() const
 {
     return _topic;
+}
+
+void Channel::set_inviteOnly()
+{
+    inviteOnly = true;
+}
+
+bool Channel::isInviteOnly()
+{
+    return inviteOnly;
+}
+
+void Channel::addInvite(std::string &nick)
+{
+    invited_users.insert(nick);
 }

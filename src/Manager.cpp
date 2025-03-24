@@ -1,5 +1,6 @@
 #include "Manager.hpp"
 #include "Server.hpp"
+#include "Command.hpp"
 
 Manager::Manager()
 {
@@ -8,6 +9,7 @@ Manager::Manager()
 	commands["USER"] = new User();
 	commands["JOIN"] = new Join();
 	commands["PRIVMSG"] = new Privmsg();
+	commands["INVITE"] = new Invite();
 }
 
 Manager::~Manager()

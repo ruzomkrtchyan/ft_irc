@@ -3,11 +3,8 @@
 
 #include <iostream> 
 #include <map>
-#include "Nick.hpp"
-#include "Pass.hpp"
-#include "User.hpp"
-#include "Join.hpp"
-#include "Privmsg.hpp"
+#include <vector>
+#include "Client.hpp"
 
 class Command;
 class Server;

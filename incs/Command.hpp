@@ -48,18 +48,29 @@ class Join : public Command
 
 class Privmsg : public Command
 {
-		public:
+	public:
 		Privmsg();
 		~Privmsg();
+
 		void execute(Server &serv, Client &client, const std::vector<std::string>& args);
 };
 
 class Invite : public Command
 {
-public:
-    Invite();
-    ~Invite();
-    void execute(Server &serv, Client &client, const std::vector<std::string>& args);
+    public:
+        Invite();
+        ~Invite();
+
+        void execute(Server &serv, Client &client, const std::vector<std::string>& args);
+};
+
+class Mode : public Command
+{
+    public:
+        Mode();
+        ~Mode();
+        
+        void execute(Server &serv, Client &client, const std::vector<std::string>& args);
 };
 
 #endif
