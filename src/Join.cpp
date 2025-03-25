@@ -16,6 +16,12 @@ void Join::execute(Server &serv, Client &client, const std::vector<std::string>&
 
     std::string channelName = args[1];
 
+    if ((channelName[0] != '#' && channelName[0] != '&'))
+    {
+        client.sendMessage(ERR_NOSUCHCHANNEL(client.getNickname(), channelName));
+        return;
+    }
+    
     Channel* channel = serv.getChannel(channelName);
     if (channel && channel->isMember(client))
         return;
@@ -27,11 +33,6 @@ void Join::execute(Server &serv, Client &client, const std::vector<std::string>&
         client.setOperator();
     }
 
-    if ((channelName[0] != '#' && channelName[0] != '&'))
-    {
-        client.sendMessage(ERR_NOSUCHCHANNEL(client.getNickname(), channelName));
-        return;
-    }
 
     // Channel* channel = serv.getChannel(channelName);
     // if (channel && channel->isMember(client))
@@ -48,7 +49,7 @@ void Join::execute(Server &serv, Client &client, const std::vector<std::string>&
     client.sendMessage(":" + client.getPrefix(client) + " JOIN " + channelName);
 
      if (!channel->getTopic().empty()) {
-        client.sendMessage(RPL_TOPIC(channelName, channel->getTopic()));
+        client.sendMessage(RPL_TOPIC(client.getNickname(),channelName, channel->getTopic()));
     }
 
     channel->broadcast(":" + client.getPrefix(client) + " JOIN " + channelName, client);

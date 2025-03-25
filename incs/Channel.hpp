@@ -26,6 +26,7 @@ class Channel
         void removeMember(const Client& client);
         void broadcast(const std::string& message, const Client& sender);
         std::string getTopic() const;
+        void setTopic(std::string &topic);
 
         void set_inviteOnly();
         bool isInviteOnly();

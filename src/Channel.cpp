@@ -39,6 +39,11 @@ std::string Channel::getTopic() const
     return _topic;
 }
 
+void Channel::setTopic(std::string &topic)
+{
+    _topic = topic;
+}
+
 void Channel::set_inviteOnly()
 {
     inviteOnly = true;

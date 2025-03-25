@@ -11,6 +11,7 @@ Manager::Manager()
 	commands["PRIVMSG"] = new Privmsg();
 	commands["KICK"] = new Kick();
 	commands["INVITE"] = new Invite();
+	commands["TOPIC"] = new Topic();
 }
 
 Manager::~Manager()
