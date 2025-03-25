@@ -12,6 +12,7 @@ Manager::Manager()
 	commands["KICK"] = new Kick();
 	commands["INVITE"] = new Invite();
 	commands["TOPIC"] = new Topic();
+	commands["MODE"] = new Mode();
 }
 
 Manager::~Manager()

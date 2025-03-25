@@ -6,7 +6,7 @@ Join::Join()
 Join::~Join()
 {}
 
-void Join::execute(Server &serv, Client &client, const std::vector<std::string>& args)
+void Join::execute(Server &serv, Client &client, const std::vector<std::string>& args) //TODO: add part for checking limit in a chanel
 {
     if (args.size() < 2)
     {
