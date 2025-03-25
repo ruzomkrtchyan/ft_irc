@@ -1,6 +1,4 @@
-#include "Kick.hpp"
-#include "Server.hpp"
-#include "Client.hpp"
+#include "Command.hpp"
 
 Kick::Kick() {}
 

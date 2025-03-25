@@ -64,6 +64,15 @@ class Invite : public Command
         void execute(Server &serv, Client &client, const std::vector<std::string>& args);
 };
 
+class Kick : public Command 
+{
+    public:
+        Kick();
+        ~Kick();
+
+        void execute(Server &serv, Client &client, const std::vector<std::string>& args);
+};
+
 class Mode : public Command
 {
     public:

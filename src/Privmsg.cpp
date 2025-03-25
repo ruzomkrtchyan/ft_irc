@@ -64,9 +64,3 @@ void Privmsg::execute(Server &serv, Client &client, const std::vector<std::strin
 	}
 	
 }
-// PRIVMSG <target> :<message>
-// <target> → A nickname (to message a specific user) or a channel (to message a group).
-// <message> → The actual text message.
-
-// PRIVMSG #general :Hello everyone!
-// :user1 PRIVMSG #general :Hello everyone!
