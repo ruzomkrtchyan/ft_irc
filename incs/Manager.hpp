@@ -5,6 +5,7 @@
 #include <map>
 #include <vector>
 #include "Client.hpp"
+#include "Kick.hpp"
 
 class Command;
 class Server;
