@@ -73,4 +73,14 @@ class Mode : public Command
         void execute(Server &serv, Client &client, const std::vector<std::string>& args);
 };
 
+class Topic : public Command
+{
+    public:
+        Topic();
+        ~Topic();
+
+        void execute(Server &serv, Client &client, const std::vector<std::string>& args);
+};
+
+
 #endif

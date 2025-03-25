@@ -5,8 +5,8 @@
 #define RPL_WELCOME(source)                     "001 " + source + " :Welcome to the ft_irc Network"
 #define RPL_ENDOFWHO(name, source)              "315 " + name + " " + source + " :End of WHO list"
 #define RPL_CHANNELMODEIS(channelName1, channelName2, mode_params) "324 " + channelName1 + " " + channelName2 + " " + " " + mode_params
-#define RPL_NOTOPIC(channelName)                "331 # " + channelName
-#define RPL_TOPIC(channelName, topic)           "332 # " + channelName + " :" + topic
+#define RPL_NOTOPIC(nick, channel) (":" + nick + " 331 " + nick + " " + channel + " :No topic is set\r\n")
+#define RPL_TOPIC(nick, channel, topic) (":" + nick + " 332 " + nick + " " + channel + " :" + topic + "\r\n")
 #define RPL_INVITING(name, nick, ch)            "341 " + name + " " + nick + " " + ch
 #define RPL_WHOREPLY(name, ch, us, hst, nick, fl, re)"352 " + name + " " + ch + " " + us + " " + hst + " ft_irc " + nick + " " + fl + " :" + re
 #define RPL_NAMREPLY(nick, ch, nickList)        "353 " + nick + " = " + ch + " :" + nickList
