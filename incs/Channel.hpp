@@ -12,13 +12,13 @@ class Channel
     private:
         std::string _name;
         std::string _topic;
-        std::map<std::string, Client*> _members;
-
+        
         bool                    inviteOnly;
         std::set<std::string>   invited_users;
-
+        
         std::set<std::string> _operators;
     public:
+        std::map<std::string, Client*> _members;
         Channel(const std::string& name, Client& creator);
         bool isMember(const Client& client) const;
         bool isOperator(const Client& client) const;

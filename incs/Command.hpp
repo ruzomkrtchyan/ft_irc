@@ -6,17 +6,17 @@
 
 class Command
 {
-    public:
-        virtual ~Command();
-        virtual void execute(Server &serv, Client &client, const std::vector<std::string>& args) = 0; 
+	public:
+		virtual ~Command();
+		virtual void execute(Server &serv, Client &client, const std::vector<std::string>& args) = 0; 
 };
 
 class Pass : public Command
 {
-    public:
-        Pass();
-        ~Pass();
-        void execute(Server &serv, Client &client, const std::vector<std::string>& args);
+	public:
+		Pass();
+		~Pass();
+		void execute(Server &serv, Client &client, const std::vector<std::string>& args);
 };
 
 class Nick : public Command
@@ -30,20 +30,20 @@ class Nick : public Command
 
 class User : public Command
 {
-    public:
-        User();
-        ~User();
-        
-        void execute(Server &serv, Client &client, const std::vector<std::string>& args);
+	public:
+		User();
+		~User();
+		
+		void execute(Server &serv, Client &client, const std::vector<std::string>& args);
 };
 
 class Join : public Command
 {
-    public:
-        Join();
-        ~Join();
+	public:
+		Join();
+		~Join();
 
-        void execute(Server &serv, Client &client, const std::vector<std::string>& args);
+		void execute(Server &serv, Client &client, const std::vector<std::string>& args);
 };
 
 class Privmsg : public Command
@@ -57,38 +57,38 @@ class Privmsg : public Command
 
 class Invite : public Command
 {
-    public:
-        Invite();
-        ~Invite();
+	public:
+		Invite();
+		~Invite();
 
-        void execute(Server &serv, Client &client, const std::vector<std::string>& args);
+		void execute(Server &serv, Client &client, const std::vector<std::string>& args);
 };
 
 class Kick : public Command 
 {
-    public:
-        Kick();
-        ~Kick();
+	public:
+		Kick();
+		~Kick();
 
-        void execute(Server &serv, Client &client, const std::vector<std::string>& args);
-};
-
-class Mode : public Command
-{
-    public:
-        Mode();
-        ~Mode();
-        
-        void execute(Server &serv, Client &client, const std::vector<std::string>& args);
+		void execute(Server &serv, Client &client, const std::vector<std::string>& args);
 };
 
 class Topic : public Command
 {
-    public:
-        Topic();
-        ~Topic();
+	public:
+		Topic();
+		~Topic();
 
-        void execute(Server &serv, Client &client, const std::vector<std::string>& args);
+		void execute(Server &serv, Client &client, const std::vector<std::string>& args);
+};
+
+class Quit : public Command
+{
+	public:
+		Quit();
+		~Quit();
+
+		void execute(Server &serv, Client &client, const std::vector<std::string>& args);
 };
 
 
