@@ -7,6 +7,13 @@ Channel::Channel(const std::string& name, Client& creator) : _name(name),inviteO
     _operators.insert(creator.getNickname());
 }
 
+Client* Channel::getClientByNickname(const std::string& nickname) {
+    std::map<std::string, Client*>::iterator it = this->_members.find(nickname);
+    if (it != this->_members.end())
+        return it->second;
+    return NULL; 
+}
+
 bool Channel::isMember(const Client& client) const
 {
     return _members.find(client.getNickname()) != _members.end();
@@ -39,14 +46,19 @@ std::string Channel::getTopic() const
     return _topic;
 }
 
+void Channel::setTopicRestricted(bool value)
+{
+    _topicRestricted = value;
+}
+
 void Channel::setTopic(std::string &topic)
 {
     _topic = topic;
 }
 
-void Channel::set_inviteOnly()
+void Channel::set_inviteOnly(bool value)
 {
-    inviteOnly = true;
+    inviteOnly = value;
 }
 
 bool Channel::isInviteOnly()
@@ -57,4 +69,47 @@ bool Channel::isInviteOnly()
 void Channel::addInvite(std::string &nick)
 {
     invited_users.insert(nick);
+}
+
+void Channel::setUserLimit(int limit)
+{
+    _userLimit = limit;
+}
+
+void Channel::setPassword(const std::string& pass)
+{
+    _password = pass;
+}
+
+void Channel::removePassword()
+{
+    this->_password.clear();
+}
+
+void Channel::setOperator(Client& client, bool isOp)
+{
+    if (isOp)
+        this->_operators.insert(client.getNickname()); // Add operator
+    else
+        this->_operators.erase(client.getNickname()); // Remove operator
+}
+
+bool Channel::isClientInChannel(Client& client) const
+{
+    return (_members.find(client.getNickname()) != _members.end());
+}
+
+bool Channel::isFull() const
+{
+    return (_members.size() >= _userLimit);
+}
+
+
+std::string Channel::getModes() const {
+    std::string modes = "+";
+    if (_inviteOnly) modes += "i";
+    if (_topicRestricted) modes += "t";
+    if (!_password.empty()) modes += "k";
+    if (_userLimit > 0) modes += "l";
+    return modes;
 }

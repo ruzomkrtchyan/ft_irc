@@ -6,6 +6,7 @@
 #include <netinet/in.h>
 #include <netdb.h>
 #include <arpa/inet.h>
+#include <map>
 
 class Client
 {
@@ -40,6 +41,7 @@ class Client
 		void 	authenticate();
 		void	registerClient();
 		void	sendMessage(const std::string& message);
+		void	leaveAllChannels();
 };
 
 #endif

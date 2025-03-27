@@ -13,6 +13,7 @@ Manager::Manager()
 	commands["INVITE"] = new Invite();
 	commands["TOPIC"] = new Topic();
 	commands["QUIT"] = new Quit();
+	commands["MODE"] = new Mode();
 }
 
 Manager::~Manager()

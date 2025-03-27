@@ -17,6 +17,7 @@
 #include "Channel.hpp"
 #include <errno.h>
 #include <stdio.h>
+#include <sstream>
 // #include "Manager.hpp"
 
 class Manager;
@@ -52,6 +53,7 @@ class Server
 
 		Channel* getChannel(const std::string& name);
 		Channel* createChannel(const std::string& name, Client& creator);
+		void checkForClosedChannels();
 };
 
 #endif

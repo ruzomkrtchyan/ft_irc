@@ -184,3 +184,20 @@ void Server::removeClient(Client& client)
     clients.erase(fd);
     std::cout << "Client with FD " << fd << " removed." << std::endl;
 }
+
+void Server::checkForClosedChannels()
+{
+    std::map<std::string, Channel*>::iterator it = _channels.begin();
+    while (it != _channels.end())
+    {
+        if (it->second->getClientCount() == 0)  // If no users left in the channel
+        {
+            delete it->second;  // Free memory
+            it = _channels.erase(it);  // Remove from map and move iterator
+        }
+        else
+        {
+            ++it;
+        }
+    }
+}
