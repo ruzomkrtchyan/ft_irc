@@ -21,13 +21,15 @@ class Channel
         bool _inviteOnly;
         bool _topicRestricted;
         std::string _password;
-        int _userLimit;
+        size_t _userLimit;
 
     public:
         Channel(const std::string& name, Client& creator);
         Client* getClientByNickname(const std::string& nickname);
         bool isMember(const Client& client) const;
         bool isOperator(const Client& client) const;
+        bool isClientInChannel(Client& client) const;
+        bool isFull() const;
         void addMember(Client& client);
         void removeMember(const Client& client);
         void broadcast(const std::string& message, const Client& sender);

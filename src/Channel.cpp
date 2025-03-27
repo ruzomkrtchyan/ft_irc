@@ -94,6 +94,17 @@ void Channel::setOperator(Client& client, bool isOp)
         this->_operators.erase(client.getNickname()); // Remove operator
 }
 
+bool Channel::isClientInChannel(Client& client) const
+{
+    return (_members.find(client.getNickname()) != _members.end());
+}
+
+bool Channel::isFull() const
+{
+    return (_members.size() >= _userLimit);
+}
+
+
 std::string Channel::getModes() const {
     std::string modes = "+";
     if (_inviteOnly) modes += "i";
