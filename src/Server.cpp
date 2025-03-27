@@ -190,14 +190,19 @@ void Server::checkForClosedChannels()
     std::map<std::string, Channel*>::iterator it = _channels.begin();
     while (it != _channels.end())
     {
-        if (it->second->getClientCount() == 0)  // If no users left in the channel
+        if (it->second->_members.empty())  // If no users left in the channel
         {
             delete it->second;  // Free memory
-            it = _channels.erase(it);  // Remove from map and move iterator
+            	_channels.erase(it);  // Remove from map and move iterator
         }
         else
-        {
             ++it;
-        }
     }
 }
+
+// void Server::leaveAllChannels(Client& client)
+// {
+//     for (std::map<std::string, Channel*>::iterator it = _channels.begin(); it != _channels.end(); ++it)
+//         removeClient(client);
+//     _channels.clear();
+// }

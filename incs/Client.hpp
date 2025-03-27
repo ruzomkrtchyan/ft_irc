@@ -41,7 +41,6 @@ class Client
 		void 	authenticate();
 		void	registerClient();
 		void	sendMessage(const std::string& message);
-		void	leaveAllChannels();
 };
 
 #endif

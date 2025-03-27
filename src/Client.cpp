@@ -1,4 +1,5 @@
 #include "Client.hpp"
+#include "Channel.hpp"
 
 Client::Client() : sockfd(-1), authRetries(0), authenticated(false), isRegistered(false), is_operator(false), ip_address("0.0.0.0") {}
 
@@ -101,13 +102,4 @@ void Client::registerClient()
 void Client::sendMessage(const std::string& message)
 {
 	send(sockfd, message.c_str(), message.length(), 0);
-}
-
-void Client::leaveAllChannels()
-{
-    for (std::map<std::string, Channel*>::iterator it = _channels.begin(); it != _channels.end(); ++it)
-    {
-        it->second->removeClient(*this);
-    }
-    _channels.clear();
 }

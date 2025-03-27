@@ -6,6 +6,20 @@ Join::Join()
 Join::~Join()
 {}
 
+
+std::vector<std::string> splitString(const std::string& str, char delimiter) 
+{
+    std::vector<std::string> tokens;
+    std::stringstream ss(str);
+    std::string token;
+
+    while (std::getline(ss, token, delimiter)) {
+        tokens.push_back(token);
+    }
+
+    return tokens;
+}
+
 void Join::execute(Server &serv, Client &client, const std::vector<std::string>& args)
 {
     if (!client.isRegistered)
@@ -22,7 +36,7 @@ void Join::execute(Server &serv, Client &client, const std::vector<std::string>&
 
     if (args[0] == "0")
     {
-        client.leaveAllChannels();
+        serv.leaveAllChannels(client);
         serv.checkForClosedChannels();
         return;
     }
@@ -33,9 +47,9 @@ void Join::execute(Server &serv, Client &client, const std::vector<std::string>&
     size_t pos = args[0].find(',');
     if (pos != std::string::npos)
     {
-        channelNames = split(args[0], ',');  // Assuming a split function exists
+        channelNames = splitString(args[0], ',');  // Assuming a split function exists
         if (args.size() > 1)
-            channelKeys = split(args[1], ',');
+            channelKeys = splitString(args[1], ',');
     }
     else
     {

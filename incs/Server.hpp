@@ -35,11 +35,6 @@ class Server
 		void		create_sock();
 		void		new_client();
 		void		receiving_data(int i);
-		std::string trim_p(std::string pass);
-		void		client_authentication(int i, std::string msg);
-		void		client_nickname(int i, std::string msg);
-		void		client_username(int i, std::string msg);
-		void		processCommand(Client &client, const std::string &command);
 		void		handle_msg(Client &client, std::string msg);
 		
 		public:
@@ -51,9 +46,10 @@ class Server
 		void		removeClient(Client& client);
 		Client*		get_client_bynick(std::string &nick);
 
-		Channel* getChannel(const std::string& name);
-		Channel* createChannel(const std::string& name, Client& creator);
-		void checkForClosedChannels();
+		Channel*	getChannel(const std::string& name);
+		Channel*	createChannel(const std::string& name, Client& creator);
+		void		checkForClosedChannels();
+		void		leaveAllChannels(Client& client);
 };
 
 #endif

@@ -73,6 +73,15 @@ class Kick : public Command
 		void execute(Server &serv, Client &client, const std::vector<std::string>& args);
 };
 
+class Mode : public Command
+{
+    public:
+        Mode();
+        ~Mode();
+        
+        void execute(Server &serv, Client &client, const std::vector<std::string>& args);
+};
+
 class Topic : public Command
 {
 	public:
