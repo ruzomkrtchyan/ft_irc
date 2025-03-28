@@ -6,22 +6,9 @@ Join::Join()
 Join::~Join()
 {}
 
-
-std::vector<std::string> splitString(const std::string& str, char delimiter) 
-{
-    std::vector<std::string> tokens;
-    std::stringstream ss(str);
-    std::string token;
-
-    while (std::getline(ss, token, delimiter)) {
-        tokens.push_back(token);
-    }
-
-    return tokens;
-}
-
 void Join::execute(Server &serv, Client &client, const std::vector<std::string>& args)
 {
+
     if (!client.isRegistered)
     {
         client.sendMessage(ERR_NOTREGISTERED(client.getNickname()));
@@ -33,73 +20,35 @@ void Join::execute(Server &serv, Client &client, const std::vector<std::string>&
         client.sendMessage(ERR_NEEDMOREPARAMS(client.getNickname(), "JOIN"));
         return;
     }
+    
+    std::string channelName = args[1];
 
-    if (args[0] == "0")
+    if (channelName.empty() || (channelName[0] != '#' && channelName[0] != '&'))
     {
-        serv.leaveAllChannels(client);
-        serv.checkForClosedChannels();
-        return;
+        client.sendMessage(ERR_BADCHANMASK(client.getNickname(), channelName));
+    }
+    Channel* channel = serv.getChannel(channelName);
+    if (!channel)
+    {
+        channel = serv.createChannel(channelName, client);
+    }
+    if (channel->isClientInChannel(client))
+    {
+        client.sendMessage(ERR_USERONCHANNEL(client.getNickname(), client.getNickname(), channelName));
     }
 
-    std::vector<std::string> channelNames;
-    std::vector<std::string> channelKeys;
-
-    size_t pos = args[0].find(',');
-    if (pos != std::string::npos)
+    if (channel->isInviteOnly())
     {
-        channelNames = splitString(args[0], ',');  // Assuming a split function exists
-        if (args.size() > 1)
-            channelKeys = splitString(args[1], ',');
+        client.sendMessage(ERR_INVITEONLYCHAN(client.getNickname(), channelName));
     }
-    else
+    if (channel->isFull())
     {
-        channelNames.push_back(args[0]);
-        if (args.size() > 1)
-            channelKeys.push_back(args[1]);
+        client.sendMessage(ERR_CHANNELISFULL(client.getNickname(), channelName));
     }
-
-    for (size_t i = 0; i < channelNames.size(); i++)
-    {
-        std::string name = channelNames[i];
-        std::string pass = (i < channelKeys.size()) ? channelKeys[i] : "";
-
-        if (name.empty() || (name[0] != '#' && name[0] != '&'))
-        {
-            client.sendMessage(ERR_BADCHANMASK(client.getNickname(), name));
-            continue;
-        }
-
-        Channel* channel = serv.getChannel(name);
-        if (!channel)
-        {
-            channel = serv.createChannel(name, client);
-            continue;
-        }
-
-        if (channel->isClientInChannel(client))
-        {
-            client.sendMessage(ERR_USERONCHANNEL(client.getNickname(), client.getNickname(), name));
-            continue;
-        }
-
-        if (channel->isInviteOnly())
-        {
-            client.sendMessage(ERR_INVITEONLYCHAN(client.getNickname(), name));
-            continue;
-        }
-
-        if (channel->isFull())
-        {
-            client.sendMessage(ERR_CHANNELISFULL(client.getNickname(), name));
-            continue;
-        }
-
-        // if (!pass.empty() && channel->getPassword() != pass)
-        // {
-        //     client.sendMessage(ERR_BADCHANNELKEY(client.getNickname(), name, "Cannot join channel (+k)"));
-        //     continue;
-        // }
-
-        channel->addMember(client);
-    }
+    // if (!pass.empty() && channel->getPassword() != pass)
+    // {
+    //     client.sendMessage(ERR_BADCHANNELKEY(client.getNickname(), name, "Cannot join channel (+k)"));
+    //     continue;
+    // }
+    channel->addMember(client);
 }
