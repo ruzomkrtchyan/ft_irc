@@ -17,8 +17,8 @@ void Mode::execute(Server &serv, Client &client, const std::vector<std::string>&
         return;
     }
 
-    std::string target = args[0];
-    std::string mode = args[1];
+    std::string target = args[1];
+    std::string mode = args[2];
 
     // Check if the target is a channel
     if (target[0] == '#') {

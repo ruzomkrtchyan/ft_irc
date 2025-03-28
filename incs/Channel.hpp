@@ -7,6 +7,7 @@
 #include <set>
 #include "Client.hpp"
 
+#define USER_LIMIT 10 
 class Channel
 {
     private:

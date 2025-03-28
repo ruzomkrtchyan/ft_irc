@@ -101,7 +101,7 @@ bool Channel::isClientInChannel(Client& client) const
 
 bool Channel::isFull() const
 {
-    return (_members.size() >= _userLimit);
+    return (_members.size() >= USER_LIMIT);
 }
 
 
