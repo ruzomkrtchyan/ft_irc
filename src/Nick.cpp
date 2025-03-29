@@ -18,7 +18,7 @@ void Nick::execute(Server &serv, Client &client, const std::vector<std::string>&
 	if (args.size() > 1)
 	{
 		client.setNickname(args[1]); //should set clients.nickname also
-		send(client.getFd(), "Nickname set successfully! Please enter USER <username> 0 * <realname>\n", 54, 0);
+		send(client.getFd(), "Nickname set successfully! Please enter USER <username> 0 * <realname>\n", 71, 0);
 		std::cout << "Client " << client.sockfd << " set nickname: " << client.getNickname() << std::endl;
 	}
 	else
