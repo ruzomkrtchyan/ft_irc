@@ -53,24 +53,24 @@ void Mode::execute(Server &serv, Client &client, const std::vector<std::string>&
                 return;
             }
             if (mode == "+k") {
-                channel->setPassword(args[2]);
+                channel->setPassword(args[3]);
             } else {
                 channel->setPassword("");
             }
-            channel->broadcast(RPL_MODE(client.getPrefix(client), target, mode + (mode == "+k" ? " " + args[2] : "")), client);
+            channel->broadcast(RPL_MODE(client.getPrefix(client), target, mode + (mode == "+k" ? " " + args[3] : "")), client);
         } 
         else if (mode == "+o" || mode == "-o") {
             if (args.size() < 3) {
                 client.sendMessage(ERR_NEEDMOREPARAMS(client.getNickname(), "MODE"));
                 return;
             }
-            Client* targetClient = channel->getClientByNickname(args[2]);
+            Client* targetClient = channel->getClientByNickname(args[3]);
             if (!targetClient) {
-                client.sendMessage(ERR_USERNOTINCHANNEL(client.getNickname(), args[2], target));
+                client.sendMessage(ERR_USERNOTINCHANNEL(client.getNickname(), args[3], target));
                 return;
             }
             channel->setOperator(*targetClient, mode == "+o");
-            channel->broadcast(RPL_MODE(client.getPrefix(client), target, mode + " " + args[2]), client);
+            channel->broadcast(RPL_MODE(client.getPrefix(client), target, mode + " " + args[3]), client);
         } 
         else if (mode == "+l" || mode == "-l") {
             if (mode == "+l") {
@@ -78,7 +78,7 @@ void Mode::execute(Server &serv, Client &client, const std::vector<std::string>&
                     client.sendMessage(ERR_NEEDMOREPARAMS(client.getNickname(), "MODE"));
                     return;
                 }
-                int limit = std::atoi(args[2].c_str());
+                int limit = std::atoi(args[3].c_str());
                 if (limit < 1) {
                     client.sendMessage(ERR_UNKNOWNMODE(client.getNickname(), mode, "Limit must be greater than 0"));
                     return;
@@ -87,7 +87,7 @@ void Mode::execute(Server &serv, Client &client, const std::vector<std::string>&
             } else {
                 channel->setUserLimit(0); // Remove limit
             }
-            channel->broadcast(RPL_MODE(client.getPrefix(client), target, mode + (mode == "+l" ? " " + args[2] : "")), client);
+            channel->broadcast(RPL_MODE(client.getPrefix(client), target, mode + (mode == "+l" ? " " + args[3] : "")), client);
         } 
         else {
             client.sendMessage(ERR_UNKNOWNMODE(client.getNickname(), mode, "Unknown mode"));
