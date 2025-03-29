@@ -9,19 +9,24 @@ User::~User()
 void User::execute(Server &serv, Client &client, const std::vector<std::string>& args)
 {
 	(void) serv;
+	if (client.isFullyRegistered())
+	{
+		client.sendMessage(ERR_ALREADYREGISTERED(client.getNickname()));
+		return;
+	}
 	if (!client.isAuth())
 	{
-		send(client.getFd(), "You must authenticate first with PASS.\n", 39, 0);
+		send(client.getFd(), ":server 451 * :You have not registered\r\n", 38, 0);
 		return;
 	}
 	if (client.getNickname().empty())
 	{
-		send(client.getFd(), "You must set a nickname first with NICK.\n", 41, 0);
+		send(client.getFd(), ":server 431 * :No nickname given\r\n", 33, 0);
         return;
 	}
 	if (args.size() < 5)
 	{
-		send(client.getFd(), "ERROR: Invalid USER format. Usage: USER <username> 0 * <realname>\n", 66, 0);
+		send(client.getFd(), ":server 461 USER :Not enough parameters\r\n", 41, 0);
 		return;
 	}
 
@@ -29,5 +34,5 @@ void User::execute(Server &serv, Client &client, const std::vector<std::string>&
 	client.setRealname(args[4]);
 
 	client.registerClient();
-	send(client.getFd(), "Registration complete! Welcome to the IRC Server.\n", 50, 0);
+	client.sendMessage(RPL_WELCOME(client.getNickname()));
 }

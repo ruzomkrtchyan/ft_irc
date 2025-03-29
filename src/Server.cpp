@@ -211,3 +211,12 @@ void Server::checkForClosedChannels()
 //         removeClient(client);
 //     _channels.clear();
 // }
+
+bool Server::isClientTaken(const std::string& targetNickname) {
+    for (std::map<int, Client>::const_iterator it = clients.begin(); it != clients.end(); ++it) {
+        if (it->second.getNickname() == targetNickname) {
+            return true; // Client with this nickname exists
+        }
+    }
+    return false; // No client found with this nickname
+}

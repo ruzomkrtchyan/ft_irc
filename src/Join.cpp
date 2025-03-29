@@ -42,8 +42,7 @@ void Join::execute(Server &serv, Client &client, const std::vector<std::string>&
             channel->addModes("k");
         }
     }
-    if (channel->hasMode('k'))
-        client.sendMessage("has mode k");
+
     if (channel->isClientInChannel(client) && !channel->isOperator(client))
     {
         client.sendMessage(ERR_USERONCHANNEL(client.getNickname(), client.getNickname(), channelName));

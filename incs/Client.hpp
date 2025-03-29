@@ -12,7 +12,6 @@ class Client
 {
 	public:
 		int			sockfd;
-		int			authRetries;
 		bool		authenticated;
 		bool		isRegistered;
 		bool		is_operator;
@@ -28,16 +27,14 @@ class Client
 		std::string	getIp() const;
 		std::string	getNickname() const;
 		std::string getUsername() const;
-		std::string getPrefix(const Client &client); //cpp fileum implementel
+		std::string getPrefix(const Client &client); 
 		std::string resolveHostname(const std::string &ip);
 		bool	isAuth() const;
 		bool	isFullyRegistered() const;
-		bool	isOperator() const;
 
 		void	setNickname(const std::string &nick);
 		void	setUsername(const std::string &user);
 		void	setRealname(const std::string &name);
-		void	setOperator();
 		void 	authenticate();
 		void	registerClient();
 		void	sendMessage(const std::string& message);

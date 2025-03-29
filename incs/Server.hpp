@@ -49,7 +49,8 @@ class Server
 		Channel*	getChannel(const std::string& name);
 		Channel*	createChannel(const std::string& name, Client& creator);
 		void		checkForClosedChannels();
-		void		leaveAllChannels(Client& client);
+
+		bool 		isClientTaken(const std::string& targetNickname);
 };
 
 #endif
