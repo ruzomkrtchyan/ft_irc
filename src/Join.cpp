@@ -29,6 +29,7 @@ void Join::execute(Server &serv, Client &client, const std::vector<std::string>&
     if (channelName.empty() || (channelName[0] != '#' && channelName[0] != '&'))
     {
         client.sendMessage(ERR_BADCHANMASK(client.getNickname(), channelName));
+        return;
     }
     Channel* channel = serv.getChannel(channelName);
     if (!channel)
@@ -42,7 +43,7 @@ void Join::execute(Server &serv, Client &client, const std::vector<std::string>&
         }
     }
     if (channel->hasMode('k'))
-        std::cout << "b" ;
+        client.sendMessage("has mode k");
     if (channel->isClientInChannel(client) && !channel->isOperator(client))
     {
         client.sendMessage(ERR_USERONCHANNEL(client.getNickname(), client.getNickname(), channelName));
@@ -62,7 +63,7 @@ void Join::execute(Server &serv, Client &client, const std::vector<std::string>&
 
     if (channel->hasMode('k'))
     {
-        if (!pass.empty() && channel->getPassword() != pass)
+        if (pass.empty() || channel->getPassword() != pass)
         {
             client.sendMessage(ERR_BADCHANNELKEY(client.getNickname(), channelName, "Cannot join channel (+k)"));
             return;
@@ -70,4 +71,9 @@ void Join::execute(Server &serv, Client &client, const std::vector<std::string>&
     }
     
     channel->addMember(client);
+
+    if (!channel->getTopic().empty())
+        client.sendMessage(RPL_TOPIC(client.getNickname(), chn, channel->getTopic()));
+        
+    channel->broadcast(":" + client.getPrefix(client) + " JOIN " + channelName, client);
 }

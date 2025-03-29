@@ -36,21 +36,26 @@ void Topic::execute(Server &serv, Client &client, const std::vector<std::string>
         return;
     }
 
-    // if (channel.findmode('t') && !client.isOperator())
-    // {
-    //     client.sendMessage(ERR_CHANOPRIVSNEEDED(client.getNickname(), "TOPIC"));
-    //     return;
-    // }
+    if (channel->hasMode('t') && !channel->isOperator(client))
+    {
+        client.sendMessage(ERR_CHANOPRIVSNEEDED(client.getNickname(), chn));
+        return;
+    }
 
     std::string topic;
-	if (args[2][0] == ':')
+    if (args[2] == ":")
+        topic = "";
+    else
 	{
-		topic = args[2].substr(1);
-		for (size_t i = 3; i < args.size(); ++i)
-			topic += " " + args[i];
-	}
-	else
-		topic = args[2];
+        if (args[2][0] == ':')
+	    {
+		    topic = args[2].substr(1);
+		    for (size_t i = 3; i < args.size(); ++i)
+		    	topic += " " + args[i];
+	    }
+	    else
+		    topic = args[2];
+    }
     
     channel->setTopic(topic);
     channel->broadcast(":" + client.getNickname() + " TOPIC " + chn + " :" + topic, client); 

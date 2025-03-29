@@ -132,6 +132,6 @@ void Channel::addModes(const std::string& modes)
 
 bool Channel::hasMode(char mode) const
 {
-    return getModes().find(mode) != std::string::npos;
+    return _modes.find(mode) != std::string::npos;
 }
 
