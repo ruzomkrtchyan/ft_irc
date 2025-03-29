@@ -74,6 +74,9 @@ void Join::execute(Server &serv, Client &client, const std::vector<std::string>&
 
     if (!channel->getTopic().empty())
         client.sendMessage(RPL_TOPIC(client.getNickname(), chn, channel->getTopic()));
-        
+
     channel->broadcast(":" + client.getPrefix(client) + " JOIN " + channelName, client);
 }
+
+
+//test
