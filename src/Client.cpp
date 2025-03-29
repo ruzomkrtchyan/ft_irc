@@ -62,10 +62,10 @@ bool Client::isFullyRegistered() const
 	return isRegistered;
 }
 
-bool	Client::isOperator() const
-{
-	return is_operator;
-}
+// bool	Client::isOperator() const
+// {
+// 	return is_operator;
+// }
 
 
 void Client::setNickname(const std::string &nick)
@@ -83,10 +83,10 @@ void Client::setRealname(const std::string &name)
 	realname = name;
 }
 
-void Client::setOperator()
-{
-	is_operator = true;
-}
+// void Client::setOperator()
+// {
+// 	is_operator = true;
+// }
 
 void Client::authenticate()
 { 

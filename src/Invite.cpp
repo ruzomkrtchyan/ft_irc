@@ -41,7 +41,7 @@ void Invite::execute(Server &serv, Client &client, const std::vector<std::string
         return;
     }
 
-    if (channel->isInviteOnly() && !client.isOperator())
+    if (channel->isInviteOnly() && !channel->isOperator(client))
     {
         client.sendMessage(ERR_CHANOPRIVSNEEDED(client.getNickname(), "INVITE"));
         return;

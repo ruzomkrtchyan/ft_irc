@@ -22,6 +22,7 @@ class Channel
         bool _topicRestricted;
         std::string _password;
         size_t _userLimit;
+        std::string _modes;
 
     public:
         std::map<std::string, Client*> _members;
@@ -42,12 +43,15 @@ class Channel
         void addInvite(std::string &nick);
         void setTopicRestricted(bool value);
         void setPassword(const std::string& pass);
+        std::string getPassword() const;
         void removePassword();
         void setUserLimit(int limit);
         void removeUserLimit();
         void setOperator(Client& client, bool isOp);
 
         std::string getModes() const;
+        bool hasMode(char mode) const;
+        void addModes(const std::string& modes);
 
 };
 

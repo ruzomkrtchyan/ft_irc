@@ -81,6 +81,11 @@ void Channel::setPassword(const std::string& pass)
     _password = pass;
 }
 
+std::string Channel::getPassword() const
+{
+    return _password;
+}
+
 void Channel::removePassword()
 {
     this->_password.clear();
@@ -104,7 +109,6 @@ bool Channel::isFull() const
     return (_members.size() >= USER_LIMIT);
 }
 
-
 std::string Channel::getModes() const {
     std::string modes = "+";
     if (_inviteOnly) modes += "i";
@@ -113,3 +117,20 @@ std::string Channel::getModes() const {
     if (_userLimit > 0) modes += "l";
     return modes;
 }
+
+void Channel::addModes(const std::string& modes)
+{
+    for (size_t i = 0; i < modes.size(); ++i)
+    {
+        if (_modes.find(modes[i]) == std::string::npos)
+        {
+            _modes += modes[i];
+        }
+    }
+}
+
+bool Channel::hasMode(char mode) const
+{
+    return getModes().find(mode) != std::string::npos;
+}
+
