@@ -50,7 +50,8 @@
 		"sstream": "cpp",
 		"stdexcept": "cpp",
 		"streambuf": "cpp",
-		"typeinfo": "cpp"
+		"typeinfo": "cpp",
+		"set": "cpp"
 	},
 	"editor.fontSize": 16,
 	"files.autoSave": "afterDelay",

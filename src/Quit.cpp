@@ -13,7 +13,7 @@ void Quit::execute(Server &serv, Client &client, const std::vector<std::string>&
         if (args[1][0] == ':')
 	    {
 	    	msg = args[1].substr(1);
-	    	for (size_t i = 3; i < args.size(); ++i)
+	    	for (size_t i = 2; i < args.size(); ++i)
 	    		msg += " " + args[i];
 	    }
 	    else
@@ -27,8 +27,7 @@ void Quit::execute(Server &serv, Client &client, const std::vector<std::string>&
         Channel *chn = it->second;
         if(chn->isMember(client))
         {
-            if (!chn->_members.empty())
-                chn->broadcast(quit_msg, client);
+            chn->broadcast(quit_msg, client);
             chn->removeMember(client);
         }
     }

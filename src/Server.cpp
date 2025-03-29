@@ -107,10 +107,15 @@ void Server::receiving_data(int i)
 
 	if (book <= 0)
 	{
-		close(fds[i].fd);
-		clients.erase(fds[i].fd);
+		if(clients.find(fds[i].fd) != clients.end())
+		{
+			Client &client = clients[fds[i].fd];
+			std::cout << "The Client disconnected:" << client.getNickname() <<std::endl;
+
+			removeClient(client);
+		}
+
 		fds.erase(fds.begin() + i);
-		std::cout << "The Client disconnected." << std::endl;
 		return;
 	}
 	std::string msg(buffer);

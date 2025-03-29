@@ -35,7 +35,8 @@ void Channel::removeMember(const Client& client) {
 
 void Channel::broadcast(const std::string& message, const Client& sender)
 {   
-    for (std::map<std::string, Client*>::iterator it = _members.begin(); it != _members.end(); ++it) {
+    std::map<std::string, Client*> member_copy = _members;
+    for (std::map<std::string, Client*>::iterator it = member_copy.begin(); it != member_copy.end(); ++it) {
         if (it->second != &sender) 
             it->second->sendMessage(message);
     }
