@@ -31,7 +31,14 @@ void Join::execute(Server &serv, Client &client, const std::vector<std::string>&
         client.sendMessage(ERR_BADCHANMASK(client.getNickname(), channelName));
         return;
     }
+
     Channel* channel = serv.getChannel(channelName);
+    if (channel && channel->isClientInChannel(client))
+    {
+        client.sendMessage(ERR_USERONCHANNEL(client.getNickname(), client.getNickname(), channelName));
+        return ;
+    }
+
     if (!channel)
     {
         channel = serv.createChannel(channelName, client);
@@ -41,12 +48,6 @@ void Join::execute(Server &serv, Client &client, const std::vector<std::string>&
             channel->setPassword(pass);
             channel->addModes("k");
         }
-    }
-
-    if (channel->isClientInChannel(client) && !channel->isOperator(client))
-    {
-        client.sendMessage(ERR_USERONCHANNEL(client.getNickname(), client.getNickname(), channelName));
-        return ;
     }
 
     if (channel->isInviteOnly() && !channel->isInvited(client.getNickname()))
