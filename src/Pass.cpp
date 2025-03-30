@@ -10,12 +10,14 @@ void Pass::execute(Server &serv, Client &client, const std::vector<std::string>&
 {
     if (client.isAuth())
     {
-        send(client.getFd(), ":server 451 * :You have not registered\r\n", 38, 0);
+        std::string msg = ":server 462 " + client.getNickname() + " :You may not reregister\r\n";
+        send(client.getFd(), msg.c_str(), msg.size(), 0);
         return;
     }
     if (args.size() < 2)
     {
-        send(client.getFd(), ":server 461 PASS :Not enough parameters\r\n", 41, 0);
+        std::string msg = ":server 461 PASS :Not enough parameters\r\n";
+        send(client.getFd(), msg.c_str(), msg.size(), 0);
         return;
     }
     std::string pass = args[1];
@@ -26,14 +28,22 @@ void Pass::execute(Server &serv, Client &client, const std::vector<std::string>&
         send(client.getFd(), ":server NOTICE AUTH :Password accepted, please enter your nickname with NICK <nickname>\r\n", 90, 0);
         return;
     }
-    else
-	{
+    else 
+    {
+        client.increment_retries();
         if (client.getAuthRetries() < 3)
         {
-            std::string msg = ":server 464 " + client.getNickname() + " :Password incorrect\r\n";
+            std::string msg = ":server 464 * :Password incorrect\r\n";
             send(client.getFd(), msg.c_str(), msg.size(), 0);
-            client.increment_retries();
         }    
-        serv.removeClient(client);
-	}
+        else
+        {
+            std::string msg = ":server 464 * :Password incorrect\r\n";
+            send(client.getFd(), msg.c_str(), msg.size(), 0);
+            
+            close(client.getFd()); 
+            client.setAuthRetries(0); 
+            serv.removeClient(client);
+        }
+    }
 }
