@@ -28,9 +28,11 @@ void Channel::addMember(Client& client)
     _members[client.getNickname()] = &client;
 }
 
-void Channel::removeMember(const Client& client) {
+void Channel::removeMember(const Client& client)
+{
     _members.erase(client.getNickname());
-    _operators.erase(client.getNickname());  // Remove from operator list if needed
+    if (isOperator(client))
+        _operators.erase(client.getNickname());  // Remove from operator list if needed
 }
 
 void Channel::broadcast(const std::string& message, const Client& sender)
@@ -107,7 +109,7 @@ bool Channel::isClientInChannel(Client& client) const
 
 bool Channel::isFull() const
 {
-    return (_members.size() >= USER_LIMIT);
+    return (_members.size() >= _userLimit);
 }
 
 std::string Channel::getModes() const {
@@ -130,6 +132,18 @@ void Channel::addModes(const std::string& modes)
     }
 }
 
+void Channel::removeModes(const std::string& modes)
+{
+    for (size_t i = 0; i < modes.size(); ++i)
+    {
+        size_t pos = _modes.find(modes[i]);
+        if (pos != std::string::npos)
+        {
+            _modes.erase(pos, 1);
+        }
+    }
+}
+
 bool Channel::hasMode(char mode) const
 {
     return _modes.find(mode) != std::string::npos;
@@ -141,3 +155,4 @@ bool Channel::isInvited(std::string nick)
         return true;
     return false;
 }
+

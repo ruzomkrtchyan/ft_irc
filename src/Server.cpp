@@ -114,8 +114,6 @@ void Server::receiving_data(int i)
 
 			removeClient(client);
 		}
-
-		fds.erase(fds.begin() + i);
 		return;
 	}
 	std::string msg(buffer);

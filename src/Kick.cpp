@@ -5,14 +5,14 @@ Kick::Kick() {}
 Kick::~Kick() {}
 
 void Kick::execute(Server &serv, Client &client, const std::vector<std::string>& args) {
-    if (args.size() < 2) {
+    if (args.size() < 3) {
         client.sendMessage("Usage: KICK <channel> <nickname> [reason]");
         return;
     }
 
-    std::string channelName = args[0];
-    std::string targetNick = args[1];
-    std::string reason = (args.size() > 2) ? args[2] : "No reason";
+    std::string channelName = args[1];
+    std::string targetNick = args[2];
+    std::string reason = (args.size() > 3) ? args[3] : "No reason";
 
     Channel* channel = serv.getChannel(channelName);
     if (!channel) {
@@ -25,23 +25,22 @@ void Kick::execute(Server &serv, Client &client, const std::vector<std::string>&
         return;
     }
 
+    Client* targetClient = serv.get_client_bynick(targetNick);
     if (!channel->isOperator(client)) {
         client.sendMessage(ERR_CHANOPRIVSNEEDED(client.getNickname(), channelName));
         return;
     }
 
-    if (!channel->isMember(*serv.get_client_bynick(targetNick))) 
+    if (!channel->isClientInChannel(*targetClient)) 
     {
-        client.sendMessage(ERR_USERNOTINCHANNEL(client.getNickname(), channelName, "KICK"));
+        client.sendMessage(ERR_USERNOTINCHANNEL(targetNick, channelName, "KICK"));
         return;
     }
 
-    channel->removeMember(client);
+    channel->removeMember(*targetClient);
     std::string kickMessage = ":" + client.getPrefix(client) + " KICK " + channelName + " " + targetNick + " :" + reason;
     channel->broadcast(kickMessage, client);
     
-    // Notify the kicked user
-    Client* targetClient = serv.get_client_bynick(targetNick);
     if (targetClient) {
         targetClient->sendMessage(kickMessage);
     }

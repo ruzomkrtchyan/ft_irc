@@ -7,7 +7,7 @@
 #include <set>
 #include "Client.hpp"
 
-#define USER_LIMIT 10 
+#define USER_LIMIT 100 
 class Channel
 {
     private:
@@ -48,12 +48,12 @@ class Channel
         std::string getPassword() const;
         void removePassword();
         void setUserLimit(int limit);
-        void removeUserLimit(); //?
         void setOperator(Client& client, bool isOp);
 
         std::string getModes() const;
         bool hasMode(char mode) const;
         void addModes(const std::string& modes);
+        void removeModes(const std::string& modes);
 
 };
 

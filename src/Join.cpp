@@ -54,7 +54,7 @@ void Join::execute(Server &serv, Client &client, const std::vector<std::string>&
         client.sendMessage(ERR_INVITEONLYCHAN(client.getNickname(), channelName));
         return ;
     }
-    if (channel->isFull())
+    if (channel->hasMode('l') && channel->isFull())
     {
         client.sendMessage(ERR_CHANNELISFULL(client.getNickname(), channelName));
         return ;

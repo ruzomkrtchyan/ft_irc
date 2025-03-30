@@ -16,12 +16,12 @@ void User::execute(Server &serv, Client &client, const std::vector<std::string>&
 	}
 	if (!client.isAuth())
 	{
-		send(client.getFd(), ":server 451 * :You have not registered\r\n", 38, 0);
+		send(client.getFd(), ":server 451 * :You have not registered\r\n", 40, 0);
 		return;
 	}
 	if (client.getNickname().empty())
 	{
-		send(client.getFd(), ":server 431 * :No nickname given\r\n", 33, 0);
+		send(client.getFd(), ":server 431 * :No nickname given\r\n", 34, 0);
         return;
 	}
 	if (args.size() < 5)
