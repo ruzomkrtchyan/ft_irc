@@ -30,10 +30,9 @@ void Pass::execute(Server &serv, Client &client, const std::vector<std::string>&
         if (client.authRetries < 3)
         {
             std::string msg = ":server 464 " + client.getNickname() + " :Password incorrect\r\n";
-            
+            send(client.getFd(), msg.c_str(), msg.size(), 0);
 
-        }
-        send(client.getFd(), msg.c_str(), msg.size(), 0);
+        }    
         serv.removeClient(client);
 	}
 }
