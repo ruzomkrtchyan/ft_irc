@@ -1,10 +1,10 @@
 #include "Client.hpp"
 #include "Channel.hpp"
 
-Client::Client() : sockfd(-1), authenticated(false), isRegistered(false), is_operator(false), ip_address("0.0.0.0") {}
+Client::Client() : sockfd(-1), authenticated(false), isRegistered(false), is_operator(false), ip_address("0.0.0.0"), authRetries(0) {}
 
 Client::Client(int fd, struct sockaddr_in client_addr)
-	: sockfd(fd), authenticated(false), nickname(""), username(""), realname("")
+	: sockfd(fd), authenticated(false), nickname(""), username(""), realname(""), authRetries(0)
 {
 	// Extract and store IP address from client socket
 	char ip[INET_ADDRSTRLEN];
@@ -87,6 +87,21 @@ void Client::setRealname(const std::string &name)
 // {
 // 	is_operator = true;
 // }
+
+void	Client::setAuthRetries(int tmp)
+{
+	authRetries = tmp;
+}
+
+int		Client::getAuthRetries()
+{
+	return (authRetries);
+}
+
+void	Client::increment_retries()
+{
+	authRetries +=1;
+}
 
 void Client::authenticate()
 { 

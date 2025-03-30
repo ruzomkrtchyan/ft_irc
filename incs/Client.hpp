@@ -36,6 +36,9 @@ class Client
 		void	setNickname(const std::string &nick);
 		void	setUsername(const std::string &user);
 		void	setRealname(const std::string &name);
+		void	setAuthRetries(int tmp);
+		int		getAuthRetries();
+		void	increment_retries();
 		void 	authenticate();
 		void	registerClient();
 		void	sendMessage(const std::string& message);
