@@ -26,12 +26,13 @@ void Kick::execute(Server &serv, Client &client, const std::vector<std::string>&
     }
 
     if (!channel->isOperator(client)) {
-        client.sendMessage("Error: You're not a channel operator.");
+        client.sendMessage(ERR_CHANOPRIVSNEEDED(client.getNickname(), channelName));
         return;
     }
 
-    if (!channel->isMember(*serv.get_client_bynick(targetNick))) {
-        client.sendMessage("Error: User " + targetNick + " is not in the channel.");
+    if (!channel->isMember(*serv.get_client_bynick(targetNick))) 
+    {
+        client.sendMessage(ERR_USERNOTINCHANNEL(client.getNickname(), channelName, "KICK"));
         return;
     }
 

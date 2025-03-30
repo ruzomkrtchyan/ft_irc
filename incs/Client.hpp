@@ -19,6 +19,7 @@ class Client
 		std::string username;
 		std::string realname;
 		std::string ip_address;
+		int			authRetries;
 
 		Client();
 		Client(int fd, struct sockaddr_in client_addr);

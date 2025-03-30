@@ -205,13 +205,6 @@ void Server::checkForClosedChannels()
     }
 }
 
-// void Server::leaveAllChannels(Client& client)
-// {
-//     for (std::map<std::string, Channel*>::iterator it = _channels.begin(); it != _channels.end(); ++it)
-//         removeClient(client);
-//     _channels.clear();
-// }
-
 bool Server::isClientTaken(const std::string& targetNickname) {
     for (std::map<int, Client>::const_iterator it = clients.begin(); it != clients.end(); ++it) {
         if (it->second.getNickname() == targetNickname) {

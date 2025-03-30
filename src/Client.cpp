@@ -101,5 +101,6 @@ void Client::registerClient()
 
 void Client::sendMessage(const std::string& message)
 {
-	send(sockfd, message.c_str(), message.length(), 0);
+	std::string fullMessage = message + "\r\n";
+	send(sockfd, fullMessage.c_str(), fullMessage.length(), 0);
 }

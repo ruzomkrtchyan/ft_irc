@@ -15,8 +15,8 @@ class Channel
         std::string _topic;
         
         bool                    inviteOnly;
-        std::set<std::string>   invited_users;
         
+        std::set<std::string>   invited_users;
         std::set<std::string> _operators;
         bool _inviteOnly;
         bool _topicRestricted;
@@ -39,6 +39,8 @@ class Channel
         void setTopic(std::string &topic);
 
         bool isInviteOnly();
+        bool isInvited(std::string nick);
+
         void set_inviteOnly(bool value);
         void addInvite(std::string &nick);
         void setTopicRestricted(bool value);
@@ -46,7 +48,7 @@ class Channel
         std::string getPassword() const;
         void removePassword();
         void setUserLimit(int limit);
-        void removeUserLimit();
+        void removeUserLimit(); //?
         void setOperator(Client& client, bool isOp);
 
         std::string getModes() const;

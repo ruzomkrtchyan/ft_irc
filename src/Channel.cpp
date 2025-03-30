@@ -135,3 +135,9 @@ bool Channel::hasMode(char mode) const
     return _modes.find(mode) != std::string::npos;
 }
 
+bool Channel::isInvited(std::string nick)
+{
+    if (invited_users.find(nick) != invited_users.end())
+        return true;
+    return false;
+}

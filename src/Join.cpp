@@ -49,7 +49,7 @@ void Join::execute(Server &serv, Client &client, const std::vector<std::string>&
         return ;
     }
 
-    if (channel->isInviteOnly())
+    if (channel->isInviteOnly() && !channel->isInvited(client.getNickname()))
     {
         client.sendMessage(ERR_INVITEONLYCHAN(client.getNickname(), channelName));
         return ;
