@@ -14,7 +14,7 @@ Manager::Manager()
 	commands["TOPIC"] = new Topic();
 	commands["QUIT"] = new Quit();
 	commands["MODE"] = new Mode();
-	commands["PING"] = new Ping();
+	// commands["PING"] = new Ping();
 	commands["CAP"] = new Cap();
 
 

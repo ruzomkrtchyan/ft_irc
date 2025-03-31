@@ -34,7 +34,8 @@ std::string Client::getUsername() const
 	return username;
 }
 
-std::string Client::resolveHostname(const std::string &ip) {
+std::string Client::resolveHostname(const std::string &ip) const
+{
     struct sockaddr_in sa;
     sa.sin_family = AF_INET;
     sa.sin_addr.s_addr = inet_addr(ip.c_str());
@@ -46,7 +47,7 @@ std::string Client::resolveHostname(const std::string &ip) {
     return ip;  // Return IP if hostname resolution fails
 }
 
-std::string Client::getPrefix(const Client &client)
+std::string Client::getPrefix(const Client &client) const
 {
 	std::string hostname = resolveHostname(client.getIp());
     return nickname + "!" + username + "@" + hostname;

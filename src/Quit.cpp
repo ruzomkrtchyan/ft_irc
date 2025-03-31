@@ -6,7 +6,7 @@ Quit::~Quit(){}
 
 void Quit::execute(Server &serv, Client &client, const std::vector<std::string>& args)
 {
-    std::string msg = "Client Quit\n";
+    std::string msg = "Client Quit";
 
     if (args.size() > 1)
     {
@@ -26,10 +26,7 @@ void Quit::execute(Server &serv, Client &client, const std::vector<std::string>&
     {
         Channel *chn = it->second;
         if(chn->isMember(client))
-        {
             chn->broadcast(quit_msg, client);
-            chn->removeMember(client);
-        }
     }
 
     serv.removeClient(client);

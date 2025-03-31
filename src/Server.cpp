@@ -13,13 +13,12 @@ Server::~Server()
 }
 void Server::create_sock()
 {
-	sockfd = socket(AF_INET, SOCK_STREAM, 0); // creates an endpoint for communication
+	sockfd = socket(AF_INET, SOCK_STREAM, 0);
 	if (sockfd == -1)
 	{
 		std::cerr << "Failed to create a socket!" << std::endl;
 		exit(1); 
 	}
-	// Need to to set the socket to non-blocking
 	fcntl(sockfd, F_SETFL, O_NONBLOCK);
 	
 	struct sockaddr_in serv_addr;
@@ -27,7 +26,7 @@ void Server::create_sock()
 
 	serv_addr.sin_family = AF_INET;
 	serv_addr.sin_port = htons(port);
-	serv_addr.sin_addr.s_addr = INADDR_ANY; //tells the server to listen on all available network interfaces (all IP addresses of the machine).
+	serv_addr.sin_addr.s_addr = INADDR_ANY; 
 
 	if (bind(sockfd, (struct sockaddr*)&serv_addr, sizeof(serv_addr)) == -1)
 	{
@@ -105,7 +104,7 @@ void Server::receiving_data(int i)
 	std::memset(buffer, 0, sizeof(buffer));
 	int book = recv(fds[i].fd, buffer, sizeof(buffer) - 1, 0);
 
-	std::cout << "=============\n" << buffer << "=============\n" << std::endl;
+	// std::cout << "=============\n" << buffer << "=============\n" << std::endl;
 	if (book <= 0)
 	{
 		if(clients.find(fds[i].fd) != clients.end())
@@ -132,9 +131,6 @@ std::vector<std::string> splitCommand(const std::string &command)
 		args.push_back(token);
 	return args;
 }
-
-
-
 
 void Server::handle_msg(Client &client, std::string msg)
 {
@@ -177,9 +173,18 @@ Channel* Server::createChannel(const std::string& name, Client& creator)
 
 void Server::removeClient(Client& client) 
 {
+	
     int fd = client.getFd();
 
-    close(fd);
+	close(fd);
+
+	for (std::map<std::string, Channel*>::iterator it = _channels.begin(); it != _channels.end(); ++it) 
+    {
+        Channel* channel = it->second;
+        if (channel->isMember(client)) 
+            channel->removeMember(client);
+    }
+
     for (size_t i = 0; i < fds.size(); i++)
 	{
         if (fds[i].fd == fd) 
@@ -189,7 +194,7 @@ void Server::removeClient(Client& client)
         }
     }
     clients.erase(fd);
-    std::cout << "Client with FD " << fd << " removed." << std::endl;
+	std::cout << "Client with FD " << fd << " (" << client.getNickname() << ") removed." << std::endl;
 }
 
 void Server::checkForClosedChannels()
@@ -197,10 +202,10 @@ void Server::checkForClosedChannels()
     std::map<std::string, Channel*>::iterator it = _channels.begin();
     while (it != _channels.end())
     {
-        if (it->second->_members.empty())  // If no users left in the channel
+        if (it->second->_members.empty())
         {
-            delete it->second;  // Free memory
-            	_channels.erase(it);  // Remove from map and move iterator
+            delete it->second; 
+            	_channels.erase(it);
         }
         else
             ++it;
@@ -210,8 +215,8 @@ void Server::checkForClosedChannels()
 bool Server::isClientTaken(const std::string& targetNickname) {
     for (std::map<int, Client>::const_iterator it = clients.begin(); it != clients.end(); ++it) {
         if (it->second.getNickname() == targetNickname) {
-            return true; // Client with this nickname exists
+            return true;
         }
     }
-    return false; // No client found with this nickname
+    return false;
 }

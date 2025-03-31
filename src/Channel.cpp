@@ -30,9 +30,20 @@ void Channel::addMember(Client& client)
 
 void Channel::removeMember(const Client& client)
 {
+    bool is_op = isOperator(client);
+    _operators.erase(client.getNickname());
     _members.erase(client.getNickname());
-    if (isOperator(client))
-        _operators.erase(client.getNickname());  // Remove from operator list if needed
+    broadcast(":" + client.getPrefix(client) + " QUIT :Client disconnected", client);
+
+    if (is_op && _operators.empty())
+    {
+        if (!_members.empty()) 
+        {
+            Client* newOperator = _members.begin()->second;
+            setOperator(*newOperator, true); 
+            broadcast(":" + newOperator->getPrefix(*newOperator) + " MODE " + _name + " +o " + newOperator->getNickname(), *newOperator);
+        }
+    }
 }
 
 void Channel::broadcast(const std::string& message, const Client& sender)
@@ -97,9 +108,9 @@ void Channel::removePassword()
 void Channel::setOperator(Client& client, bool isOp)
 {
     if (isOp)
-        this->_operators.insert(client.getNickname()); // Add operator
+        this->_operators.insert(client.getNickname()); 
     else
-        this->_operators.erase(client.getNickname()); // Remove operator
+        this->_operators.erase(client.getNickname());
 }
 
 bool Channel::isClientInChannel(Client& client) const

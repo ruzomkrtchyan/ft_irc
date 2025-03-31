@@ -28,8 +28,8 @@ class Client
 		std::string	getIp() const;
 		std::string	getNickname() const;
 		std::string getUsername() const;
-		std::string getPrefix(const Client &client); 
-		std::string resolveHostname(const std::string &ip);
+		std::string getPrefix(const Client &client) const; 
+		std::string resolveHostname(const std::string &ip) const;
 		bool	isAuth() const;
 		bool	isFullyRegistered() const;
 

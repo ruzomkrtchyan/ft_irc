@@ -22,10 +22,10 @@ void Pass::execute(Server &serv, Client &client, const std::vector<std::string>&
         return;
     }
     std::string pass;
-    if (args[2][0] == ':')
-        pass = args[2].substr(1);
+    if (args[1][0] == ':')
+        pass = args[1].substr(1);
     else
-        pass = args[2];
+        pass = args[1];
     if (pass == serv.getPassword())
     {
         client.authenticate();
