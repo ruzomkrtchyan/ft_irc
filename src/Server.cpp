@@ -104,7 +104,6 @@ void Server::receiving_data(int i)
 	std::memset(buffer, 0, sizeof(buffer));
 	int book = recv(fds[i].fd, buffer, sizeof(buffer) - 1, 0);
 
-	std::cout << "=============\n" << buffer << "=============\n" << std::endl;
 	if (book <= 0)
 	{
 		if(clients.find(fds[i].fd) != clients.end())

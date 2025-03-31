@@ -8,31 +8,35 @@ User::~User()
 
 void User::execute(Server &serv, Client &client, const std::vector<std::string>& args)
 {
-	(void) serv;
-	if (client.isFullyRegistered())
-	{
-		client.sendMessage(ERR_ALREADYREGISTERED(client.getNickname()));
-		return;
-	}
-	if (!client.isAuth())
-	{
-		send(client.getFd(), ":server 451 * :You have not registered\r\n", 40, 0);
-		return;
-	}
-	if (client.getNickname().empty())
-	{
-		send(client.getFd(), ":server 431 * :No nickname given\r\n", 34, 0);
+    (void) serv;
+    
+    if (client.isFullyRegistered())
+    {
+        client.sendMessage(ERR_ALREADYREGISTERED(client.getNickname()));
         return;
-	}
-	if (args.size() < 5)
-	{
-		send(client.getFd(), ":server 461 USER :Not enough parameters\r\n", 41, 0);
-		return;
-	}
+    }
+    
+    if (!client.isAuth())
+    {
+        client.sendMessage(ERR_NOTREGISTERED(client.getNickname()));
+        return;
+    }
+    
+    if (client.getNickname().empty())
+    {
+        client.sendMessage(ERR_NONICKNAMEGIVEN(client.getNickname()));
+        return;
+    }
+    
+    if (args.size() < 5)
+    {
+        client.sendMessage(ERR_NEEDMOREPARAMS(client.getNickname(), "USER"));
+        return;
+    }
 
-	client.setUsername(args[1]);
-	client.setRealname(args[4]);
+    client.setUsername(args[1]);
+    client.setRealname(args[4]);
 
-	client.registerClient();
-	client.sendMessage(RPL_WELCOME(client.getNickname()));
+    client.registerClient();
+    client.sendMessage(RPL_WELCOME(client.getNickname()));
 }
