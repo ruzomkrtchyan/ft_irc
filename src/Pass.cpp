@@ -8,7 +8,6 @@ Pass::~Pass()
 
 void Pass::execute(Server &serv, Client &client, const std::vector<std::string>& args)
 {
-    std::cout << args[1] << std::endl;
 
     if (client.isAuth())
     {
