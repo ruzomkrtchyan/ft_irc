@@ -14,6 +14,10 @@ Manager::Manager()
 	commands["TOPIC"] = new Topic();
 	commands["QUIT"] = new Quit();
 	commands["MODE"] = new Mode();
+	commands["PING"] = new Ping();
+	commands["CAP"] = new Cap();
+
+
 }
 
 Manager::~Manager()
@@ -26,8 +30,9 @@ void Manager::execute(std::string &command, Server &serv, Client &client, std::v
 {
 	if (!client.isFullyRegistered())
 	{
-		if( command != "PASS" && command != "NICK" && command != "USER")
+		if( command != "PASS" && command != "NICK" && command != "USER" && command != "PING" && command != "CAP")
 		{
+
 			send(client.getFd(), "451 :You have not registered. Use PASS, NICK, and USER.\r\n", 57, 0);
             return;
 		}

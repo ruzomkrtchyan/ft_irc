@@ -8,6 +8,7 @@ Pass::~Pass()
 
 void Pass::execute(Server &serv, Client &client, const std::vector<std::string>& args)
 {
+    
     if (client.isAuth())
     {
         std::string msg = ":server 462 " + client.getNickname() + " :You may not reregister\r\n";
@@ -20,7 +21,11 @@ void Pass::execute(Server &serv, Client &client, const std::vector<std::string>&
         send(client.getFd(), msg.c_str(), msg.size(), 0);
         return;
     }
-    std::string pass = args[1];
+    std::string pass;
+    if (args[2][0] == ':')
+        pass = args[2].substr(1);
+    else
+        pass = args[2];
     if (pass == serv.getPassword())
     {
         client.authenticate();
