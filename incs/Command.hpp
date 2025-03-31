@@ -100,14 +100,14 @@ class Quit : public Command
 		void execute(Server &serv, Client &client, const std::vector<std::string>& args);
 };
 
-// class Ping : public Command
-// {
-// 	public:
-// 		Ping();
-// 		~Ping();
+class Ping : public Command
+{
+	public:
+		Ping();
+		~Ping();
 
-// 		void execute(Server &serv, Client &client, const std::vector<std::string>& args);
-// };
+		void execute(Server &serv, Client &client, const std::vector<std::string>& args);
+};
 
 class Cap : public Command
 {
