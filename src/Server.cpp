@@ -104,7 +104,7 @@ void Server::receiving_data(int i)
 	std::memset(buffer, 0, sizeof(buffer));
 	int book = recv(fds[i].fd, buffer, sizeof(buffer) - 1, 0);
 
-	// std::cout << "=============\n" << buffer << "=============\n" << std::endl;
+	std::cout << "=============\n" << buffer << "=============\n" << std::endl;
 	if (book <= 0)
 	{
 		if(clients.find(fds[i].fd) != clients.end())
@@ -123,14 +123,31 @@ void Server::receiving_data(int i)
 
 std::vector<std::string> splitCommand(const std::string &command)
 {
-	std::vector<std::string> args;
-	std::stringstream ss(command);
-	std::string token;
+    std::vector<std::string> args;
+    std::string token;
 
-	while (ss >> token)
-		args.push_back(token);
-	return args;
+    for (size_t i = 0; i < command.size(); ++i)
+    {
+        if (command[i] == ' ' || command[i] == '\r' || command[i] == '\n')
+        {
+            if (!token.empty())
+            {
+                args.push_back(token);
+                token.clear();
+            }
+        }
+        else
+        {
+            token += command[i];
+        }
+    }
+
+    if (!token.empty()) 
+        args.push_back(token);
+
+    return args;
 }
+
 
 void Server::handle_msg(Client &client, std::string msg)
 {

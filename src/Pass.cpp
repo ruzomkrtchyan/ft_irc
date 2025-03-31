@@ -8,7 +8,7 @@ Pass::~Pass()
 
 void Pass::execute(Server &serv, Client &client, const std::vector<std::string>& args)
 {
-    
+    std::cout << args[1] <<std::endl;
     if (client.isAuth())
     {
         std::string msg = ":server 462 " + client.getNickname() + " :You may not reregister\r\n";
